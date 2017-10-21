@@ -27,6 +27,7 @@ namespace GingerbreadExchange.Models
 
         public DateTime CreationTime { get; set; }
 
+        [System.ComponentModel.DefaultValue("")]
         public string Email { get; set; }
     }
 }
