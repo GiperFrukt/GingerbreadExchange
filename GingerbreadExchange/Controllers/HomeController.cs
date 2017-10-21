@@ -14,17 +14,38 @@ namespace GingerbreadExchange.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            IEnumerable<Gingerbread> gingerbreads = db.Gingerbreads;
-            IEnumerable<Order> orders = db.Orders;
-            IEnumerable<History> histories = db.Histories;
-            ViewBag.Gingerbreads = gingerbreads;
+            IEnumerable<Gingerbread> gingerbreads = db.Gingerbreads.ToList();
+            IEnumerable<Order> orders = db.Orders.ToList();
+            IEnumerable<History> histories = db.Histories.ToList();
+            IEnumerable<OrderView> bov = db.Gingerbreads.Join(db.Orders, g => g.Id, o => o.GingerbreadId, (g, o) => new OrderView // результат
+            {
+                Price = g.Price,
+                Count = g.Count,
+                Email = o.Email
+            }).OrderByDescending(p => p.Price).ToList() ;
+            IEnumerable<OrderView> sov = db.Gingerbreads.Join(db.Orders, g => g.Id, o => o.GingerbreadId, (g, o) => new OrderView // результат
+            {
+                Price = g.Price,
+                Count = g.Count,
+                Email = o.Email
+            }).OrderBy(p => p.Price).ToList();
+            ViewBag.BuyOrderView = bov;
+            ViewBag.SellOrderView = sov;
+            //ViewBag.Gingerbreads = gingerbreads;
             ViewBag.Orders = orders;
             ViewBag.Histories = histories;
+
+            //var a = db.Gingerbreads.Join(db.Orders, g => g.Id, o => o.GingerbreadId, (g, o) => new // результат
+            //{
+            //    Price = g.Price,
+            //    Count = g.Count,
+            //    Email = o.Email
+            //});//OrderByDescending(p => p.Price);
             return View();
         }
 
         [HttpPost]
-        public void Order(Gingerbread gb, Order ord)
+        public ActionResult /*void*/ BuyOrder(Gingerbread gb, Order ord)
         {
             db.Gingerbreads.Add(gb);
             ord.CreationTime = DateTime.Now;
@@ -33,6 +54,7 @@ namespace GingerbreadExchange.Controllers
             ord.Gingerbread = gb;
             db.Orders.Add(ord);
             db.SaveChanges();
+            return View("Index");
         }
 
         //[HttpPost]

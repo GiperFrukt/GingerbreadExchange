@@ -14,8 +14,14 @@ namespace GingerbreadExchange
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new GingerbreadDbInitializer());
+            try
+            {
+                Database.SetInitializer(new GingerbreadDbInitializer());
+            }
+            catch(Exception ex)
+            {
 
+            }
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

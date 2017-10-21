@@ -160,6 +160,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderView.cs" />
     <Compile Include="Models\ExchangeContext.cs" />
     <Compile Include="Models\Gingerbread.cs" />
     <Compile Include="Models\GingerbreadDbInitializer.cs" />
