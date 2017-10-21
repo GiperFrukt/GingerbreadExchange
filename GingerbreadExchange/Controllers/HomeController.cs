@@ -11,6 +11,7 @@ namespace GingerbreadExchange.Controllers
     {
         ExchangeContext db = new ExchangeContext();
 
+        [HttpGet]
         public ActionResult Index()
         {
             IEnumerable<Gingerbread> gingerbreads = db.Gingerbreads;
@@ -20,6 +21,18 @@ namespace GingerbreadExchange.Controllers
             ViewBag.Orders = orders;
             ViewBag.Histories = histories;
             return View();
+        }
+
+        [HttpPost]
+        public void Order(Gingerbread gb, Order ord)
+        {
+            db.Gingerbreads.Add(gb);
+            ord.CreationTime = DateTime.Now;
+            ord.DealOperation = Deal.Buy;
+            //var a = db.Gingerbreads.First(t => t == gb);
+            ord.Gingerbread = gb;
+            db.Orders.Add(ord);
+            db.SaveChanges();
         }
 
         //[HttpPost]

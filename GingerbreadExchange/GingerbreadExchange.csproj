@@ -160,13 +160,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\BuyOrder.cs" />
     <Compile Include="Models\ExchangeContext.cs" />
     <Compile Include="Models\Gingerbread.cs" />
     <Compile Include="Models\GingerbreadDbInitializer.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\SellOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

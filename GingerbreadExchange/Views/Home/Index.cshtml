@@ -8,27 +8,65 @@
 <head>
 	<meta name="viewport" content="width=device-width" />
 	<title>Биржа пряников</title>
+	@Styles.Render("~/Content/css")
+	@Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-	<div>
-		<table class="table table-bordered">
-			<tbody>
-				<tr>
-					<th>Количество</th>
-					<th>Цена</th>
-					<!--<td><p>Количество</p></td>
-					<td><p>Цена</p></td>-->
-				</tr>
-				@foreach (var b in ViewBag.Gingerbreads)
-				{
-					<tr>
-						<td>@b.Count</td>
-						<td>@b.Price</td>
-						<!--<td><p><a href="/Home/Buy/@b.Id">Купить</a></p></td>-->
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
+	<table border="1">
+		<tr>
+			<td><b>Купить</b></td>
+		</tr>
+		<tr>
+			<td>
+				<div>
+					@using (Html.BeginForm("Order", "Home", FormMethod.Post))
+					{
+						<input type="hidden" value="@ViewBag.BookId" name="BookId" />
+						<div class="row">
+							<div class="col-md-4">
+								@Html.TextBox("Price", "Цена за шт.")
+							</div>
+						</div>
+						<div class="row"><br></div>
+						<div class="row">
+							<div class="col-md-4">
+								@Html.TextBox("Count", "Количество")
+							</div>
+							<div class="col-md-4">
+								<p><input type="submit" value="Отправить" /></p>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">
+								@Html.TextBox("Email", "Email")
+							</div>
+						</div>
+					}
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<br>
+				<b>Ордера на продажу</b>
+				<br>
+				<table class="table table-bordered">
+					<tbody>
+						<tr>
+							<th>Количество</th>
+							<th>Цена</th>
+						</tr>
+						@foreach (var b in ViewBag.Gingerbreads)
+						{
+							<tr>
+								<td>@b.Count</td>
+								<td>@b.Price</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
 </body>
 </html>
