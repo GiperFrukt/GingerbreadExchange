@@ -31,55 +31,61 @@ namespace GingerbreadExchange.Controllers
             }).OrderBy(p => p.Price).ToList();
             ViewBag.BuyOrderView = bov;
             ViewBag.SellOrderView = sov;
-            //ViewBag.Gingerbreads = gingerbreads;
             ViewBag.Orders = orders;
             ViewBag.Histories = histories;
 
-            //var a = db.Gingerbreads.Join(db.Orders, g => g.Id, o => o.GingerbreadId, (g, o) => new // результат
-            //{
-            //    Price = g.Price,
-            //    Count = g.Count,
-            //    Email = o.Email
-            //});//OrderByDescending(p => p.Price);
-            return View("Index");
-        }
-
-
-        [HttpGet]
-        public ViewResult BuyOrder()
-        {
-            
-            //Index();
             return View();
         }
 
-
         [HttpPost]
-        public /*ActionResult*/ void BuyOrder(Gingerbread gb, Order ord)
+        public ActionResult BuyOrder(string action, Gingerbread gb, Order ord)
         {
             db.Gingerbreads.Add(gb);
             ord.CreationTime = DateTime.Now;
-            ord.DealOperation = Deal.Buy;
-            //var a = db.Gingerbreads.First(t => t == gb);
+            ord.DealOperation = action == "sell" ? Deal.Sell : Deal.Buy;
             ord.Gingerbread = gb;
             db.Orders.Add(ord);
             db.SaveChanges();
-            Index();
-            //return View("Index");
+            ExecuteOrder(ord, gb);
+            return Redirect("Index");
         }
 
-        //[HttpPost]
-        //public ActionResult MyAction(string product, string action)
-        //{
-        //    if (action == "add")
-        //    {
+        void ExecuteOrder(Order ord, Gingerbread gb)
+        {
+            //если покупаем
+            IEnumerable<OrderView> bov = db.Gingerbreads.Join(db.Orders.Where(t => t.DealOperation == Deal.Sell), g => g.Id, o => o.GingerbreadId, (g, o) => new OrderView // результат
+            {
+                Price = g.Price,
+                Count = g.Count,
+                Email = o.Email
+            }).OrderBy(p => p.Price).ToList();
+            var selected = bov.Where(t => t.Price <= gb.Price) as List<OrderView>;
+            bool done = false;
+            int i = 0;
+            do
+            {
+                var sOrder = selected.ElementAt(i);
+                switch (ord.Gingerbread.Count < selected.Count)
+                {
+                    case true:
+                        // TODO извлечь из БД не продукт, а сделку с этим продуктом !!!!!!!! исправить дату создания заявки на покупку и имэйл продавца
+                        var completedDeal = new History { DealTime = DateTime.Now, BuyOrderTime = ord.CreationTime, SellOrderTime = DateTime.Now,
+                            Price = ord.Gingerbread.Price, Count = ord.Gingerbread.Count, BuyEmail = ord.Email, SellEmail = ord.Email};
+                        db.Histories.Add(completedDeal);
+                        db.Orders.Remove(ord); // удаляем из бд ордер, продукт должен удалиться автоматически
+                        
+                        break;
+                    case false:
+                        break;
+                }
+            } while (!done);
 
-        //    }
-        //    else if (action == "delete")
-        //    {
+            db.SaveChanges();
+            foreach (var a in selected)
+            {
 
-        //    }
-        //    // остальной код метода
-        //}
+            }
+        }
+        
     }
 }

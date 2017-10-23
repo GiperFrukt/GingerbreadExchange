@@ -35,17 +35,6 @@ namespace GingerbreadExchange.Models
             db.Orders.Add(o4);
             db.Orders.Add(o5);
 
-
-            //db.Gingerbreads.Add(new Gingerbread { Count = 5, Price = 220 });
-            //db.Gingerbreads.Add(new Gingerbread { Count = 6, Price = 180 });
-            //db.Gingerbreads.Add(new Gingerbread { Count = 10, Price = 150 });
-
-            //db.SaveChanges();
-
-            //Gingerbread a = db.Gingerbreads.First(t => t.Count == 10) as Gingerbread;
-
-            //db.Orders.Add(new Order { /*DealOperation = Deal.Buy, */Gingerbread = a, CreationTime = DateTime.Now, Email = "1111@11.com" });
-
             db.SaveChanges();
 
             base.Seed(db);
