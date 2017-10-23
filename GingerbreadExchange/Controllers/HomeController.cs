@@ -26,8 +26,8 @@ namespace GingerbreadExchange.Controllers
 
             var sellOrderVMList = new List<OrderVM>();
             (orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price)).ToList()
-                .ForEach(t =>sellOrderVMList.Add(new OrderVM(t)));
-            
+                .ForEach(t => sellOrderVMList.Add(new OrderVM(t)));
+
             var historyOrderVMList = new List<HistoryVM>();
             histories.ToList().ForEach(t => historyOrderVMList.Add(new HistoryVM(t)));
 
@@ -48,44 +48,53 @@ namespace GingerbreadExchange.Controllers
 
         void ExecuteOrder(Order buy)
         {
-            
+
             //если покупаем
             var orders = OrderService.QueryOrders() as List<Order>;
-            var o = orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price).ToList();
+            var o = orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price).ToList();
 
             // выбрали тех, у кого можем купить, результаты отсортировали по возрастанию цены
             var selected = o.Where(t => t.Gingerbread.Price <= buy.Gingerbread.Price).ToList();
-            bool done = false;
-            int i = 0;
             if (selected != null)
             {
+                bool done = false;
+                int i = 0;
                 do
                 {
                     var sell = selected.ElementAt(i);
-                    switch (buy.Gingerbread.Count == sell.Gingerbread.Count)
+                    if (buy.Gingerbread.Count == sell.Gingerbread.Count)
                     {
-                        case true:
-
-                            var completedDeal = new History(buy, sell);
-                            HistoryService.AddHistory(completedDeal);
-                            OrderService.DeleteOrder(buy);
-                            OrderService.DeleteOrder(sell);
-                            //if (buy.Gingerbread.Count == selected.Count)
-                            //{
-                            //    //db.Orders.Remove(db.Orders.Where(t => t.GingerbreadId == sOrde));
-                            //}
-
-                            break;
-                        case false:
-                            break;
+                        var completedDeal = new History(buy, sell);
+                        HistoryService.AddHistory(completedDeal);
+                        OrderService.DeleteOrder(buy);
+                        OrderService.DeleteOrder(sell);
+                        done = true;
                     }
-                } while (!done);
+                    else if (buy.Gingerbread.Count < sell.Gingerbread.Count)
+                    {
+                        var completedDeal = new History(buy, sell);
+                        HistoryService.AddHistory(completedDeal);
+                        sell.Gingerbread.Count = sell.Gingerbread.Count - buy.Gingerbread.Count;
+                        GingerbreadService.UpdateGingerbread(sell.Gingerbread);
+                        OrderService.DeleteOrder(buy);
+                        done = true;
+                    }
+                    else // if (buy.Gingerbread.Count > sell.Gingerbread.Count)
+                    {
+                        var completedDeal = new History(buy, sell);
+                        HistoryService.AddHistory(completedDeal);
+                        buy.Gingerbread.Count = buy.Gingerbread.Count - sell.Gingerbread.Count;
+                        GingerbreadService.UpdateGingerbread(buy.Gingerbread);
+                        OrderService.DeleteOrder(sell);
+                    }
+                    i++;
+                } while (!done || selected.Count > i);
             }
             foreach (var a in selected)
             {
 
             }
         }
-        
+
     }
 }

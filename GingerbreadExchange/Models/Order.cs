@@ -45,5 +45,8 @@ namespace GingerbreadExchange.Models
         public DateTime CreationTime { get; set; }
 
         public string Email { get; set; }
+
+        [NotMapped]
+        public Gingerbread GetGingerbread { get { return Gingerbread; } set { } }
     }
 }

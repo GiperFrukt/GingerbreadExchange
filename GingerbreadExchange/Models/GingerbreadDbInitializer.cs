@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace GingerbreadExchange.Models
 {
-    public class GingerbreadDbInitializer : DropCreateDatabaseIfModelChanges<ExchangeContext>
+    public class GingerbreadDbInitializer : DropCreateDatabaseAlways<ExchangeContext>
     {
         protected override void Seed(ExchangeContext db)
         {

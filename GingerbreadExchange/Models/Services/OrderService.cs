@@ -27,5 +27,11 @@ namespace GingerbreadExchange.Models.Services
             var sqlBiulder = new SqlBuilder();
             return sqlBiulder.Add<Order>(o);
         }
+
+        public static bool UpdateOrder(Order o)
+        {
+            var sqlBiulder = new SqlBuilder();
+            return sqlBiulder.Update<Order>(o);
+        }
     }
 }

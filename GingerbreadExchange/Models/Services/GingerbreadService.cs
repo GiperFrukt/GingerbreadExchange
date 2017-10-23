@@ -26,5 +26,11 @@ namespace GingerbreadExchange.Models.Services
             var sqlBiulder = new SqlBuilder();
             return sqlBiulder.Add<Gingerbread>(gb);
         }
+
+        public static bool UpdateGingerbread(Gingerbread gb)
+        {
+            var sqlBiulder = new SqlBuilder();
+            return sqlBiulder.Update<Gingerbread>(gb);
+        }
     }
 }
