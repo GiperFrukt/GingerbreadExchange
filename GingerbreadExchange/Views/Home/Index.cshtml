@@ -22,7 +22,8 @@
 					<td>
 						<div>
 							@using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
-							{
+                            {
+                                <input type="hidden" value="Buy" name="dealOperation" />
 								<div class="row">
 									<div class="col-md-4">
 										@Html.TextBox("Price", "Цена за шт.")

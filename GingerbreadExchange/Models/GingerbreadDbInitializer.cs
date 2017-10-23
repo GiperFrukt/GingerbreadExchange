@@ -10,17 +10,17 @@ namespace GingerbreadExchange.Models
     {
         protected override void Seed(ExchangeContext db)
         {
-            var g1 = new Gingerbread { Count = 5, Price = 220 };
-            var g2 = new Gingerbread { Count = 6, Price = 180 };
-            var g3 = new Gingerbread { Count = 10, Price = 150 };
-            var g4 = new Gingerbread { Count = 7, Price = 500 };
-            var g5 = new Gingerbread { Count = 100, Price = 600 };
+            var g1 = new Gingerbread(5, 220);
+            var g2 = new Gingerbread(6, 180); 
+            var g3 = new Gingerbread(10, 150);
+            var g4 = new Gingerbread(7, 500); 
+            var g5 = new Gingerbread(100, 600);
             
 
-            var o1 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Buy, Email = "first", Gingerbread = g1 };
-            var o2 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Buy, Email = "second", Gingerbread = g2 };
-            var o3 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Buy, Email = "third", Gingerbread = g3 };
-            var o4 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Sell, Email = "123", Gingerbread = g4 };
+            var o1 = new Order(Deal.Buy, g1, "first");
+            var o2 = new Order(Deal.Buy, g2, "second");
+            var o3 = new Order(Deal.Buy, g3, "third");
+            var o4 = new Order(Deal.Sell, g5, "123");
             var o5 = new Order(Deal.Sell, g5);
 
             db.Gingerbreads.Add(g1);

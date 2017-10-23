@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using GingerbreadExchange.Models;
+using GingerbreadExchange.Models.Services;
 
 namespace GingerbreadExchange.Controllers
 {
@@ -14,9 +15,10 @@ namespace GingerbreadExchange.Controllers
         //[HttpGet]
         public ActionResult Index()
         {
-            IEnumerable<Gingerbread> gingerbreads = db.Gingerbreads.ToList();
-            IEnumerable<Order> orders = db.Orders.ToList();
-            IEnumerable<History> histories = db.Histories.ToList();
+            var gingerbreads = GingerbreadService.QueryGingerbreads();
+            var orders = OrderService.QueryOrders();
+            var histories = HistoryService.QueryHistories();
+
             IEnumerable<OrderView> bov = db.Gingerbreads.Join(db.Orders.Where(t=>t.DealOperation == Deal.Buy) , g => g.Id, o => o.GingerbreadId, (g, o) => new OrderView // результат
             {
                 Price = g.Price,
@@ -38,15 +40,12 @@ namespace GingerbreadExchange.Controllers
         }
 
         [HttpPost]
-        public ActionResult BuyOrder(string action, Gingerbread gb, Order ord)
+        public ActionResult BuyOrder(string dealOperation, Gingerbread gb, string email)
         {
-            db.Gingerbreads.Add(gb);
-            ord.CreationTime = DateTime.Now;
-            ord.DealOperation = action == "sell" ? Deal.Sell : Deal.Buy;
-            ord.Gingerbread = gb;
-            db.Orders.Add(ord);
-            db.SaveChanges();
-            ExecuteOrder(ord, gb);
+            var dealOp = (Deal)Enum.Parse(typeof(Deal), dealOperation);
+            var order = new Order(dealOp, gb, email);
+            OrderService.AddOrder(order);
+            //ExecuteOrder(ord, gb);
             return Redirect("Index");
         }
 

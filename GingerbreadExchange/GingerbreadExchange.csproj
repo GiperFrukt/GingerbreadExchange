@@ -160,12 +160,16 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Services\GingerbreadService.cs" />
+    <Compile Include="Models\Services\HistoryService.cs" />
+    <Compile Include="Models\Services\OrderService.cs" />
     <Compile Include="Models\OrderView.cs" />
     <Compile Include="Models\ExchangeContext.cs" />
     <Compile Include="Models\Gingerbread.cs" />
     <Compile Include="Models\GingerbreadDbInitializer.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\SqlBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
