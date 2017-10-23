@@ -22,7 +22,7 @@ namespace GingerbreadExchange.Models
         {
             Id = o.Id;
             DealOperation = o.DealOperation;
-            GingerbreadId = o.GingerbreadId;
+            //GingerbreadId = o.GingerbreadId;
             Gingerbread = o.Gingerbread;
             CreationTime = o.CreationTime;
             Email = o.Email;
@@ -31,10 +31,11 @@ namespace GingerbreadExchange.Models
         public Order(Deal dealOperation, Gingerbread gingerbread, string email = "")
         {
             DealOperation = dealOperation;
-            GingerbreadId = gingerbread.Id;
+            //GingerbreadId = gingerbread.Id;
             Gingerbread = gingerbread;
             CreationTime = DateTime.Now;
             Email = email;
+            //gingerbread.Order = this;
         }
 
         [Key]
@@ -42,7 +43,7 @@ namespace GingerbreadExchange.Models
 
         public Deal DealOperation { get; set; }
 
-        public long GingerbreadId { get; set; }
+        //public long GingerbreadId { get; set; }
 
         public Gingerbread Gingerbread { get; set; }
 

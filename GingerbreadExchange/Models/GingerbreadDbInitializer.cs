@@ -6,7 +6,7 @@ using System.Data.Entity;
 
 namespace GingerbreadExchange.Models
 {
-    public class GingerbreadDbInitializer : DropCreateDatabaseIfModelChanges<ExchangeContext>
+    public class GingerbreadDbInitializer : DropCreateDatabaseAlways<ExchangeContext>
     {
         protected override void Seed(ExchangeContext db)
         {
@@ -20,7 +20,7 @@ namespace GingerbreadExchange.Models
             var o1 = new Order(Deal.Buy, g1, "first");
             var o2 = new Order(Deal.Buy, g2, "second");
             var o3 = new Order(Deal.Buy, g3, "third");
-            var o4 = new Order(Deal.Sell, g5, "123");
+            var o4 = new Order(Deal.Sell, g4, "123");
             var o5 = new Order(Deal.Sell, g5);
 
             db.Gingerbreads.Add(g1);

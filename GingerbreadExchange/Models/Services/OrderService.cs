@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -12,7 +13,7 @@ namespace GingerbreadExchange.Models.Services
         {
             var sqlBiulder = new SqlBuilder();
             var result = sqlBiulder.Select<Order>();
-            return result.ToList();
+            return result.Include(t => t.Gingerbread).ToList();
         }
 
         public static bool DeleteOrder(Order o)

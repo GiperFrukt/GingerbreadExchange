@@ -1,4 +1,5 @@
-﻿@{
+﻿@model GingerbreadExchange.ViewModels.IndexVM
+@{
 	Layout = null;
 }
 
@@ -59,12 +60,12 @@
 									<th>Количество</th>
 									<th>Email</th>
 								</tr>
-								@foreach (var b in ViewBag.SellOrderView)
+								@foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).SellVMList)
 								{
 									<tr>
-										<td>@b.Price</td>
-										<td>@b.Count</td>
-										<td>@b.Email</td>
+										<td>@item.Price</td>
+										<td>@item.Count</td>
+										<td>@item.Email</td>
 									</tr>
 								}
 							</tbody>
@@ -121,7 +122,7 @@
 									<th>Количество</th>
 									<th>Email</th>
 								</tr>
-								@foreach (var b in ViewBag.BuyOrderView)
+								@foreach (var b in (Model as GingerbreadExchange.ViewModels.IndexVM).BuyVMList)
 								{
 									<tr>
 										<td>@b.Price</td>

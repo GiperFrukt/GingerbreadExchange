@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GingerbreadExchange.Models
 {
@@ -30,5 +31,7 @@ namespace GingerbreadExchange.Models
         public int Count { get; set; }
 
         public float Price { get; set; }
+
+        //public Order Order { get; set; }
     }
 }
