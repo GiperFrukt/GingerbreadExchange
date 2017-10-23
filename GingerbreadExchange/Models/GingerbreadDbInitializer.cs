@@ -21,7 +21,7 @@ namespace GingerbreadExchange.Models
             var o2 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Buy, Email = "second", Gingerbread = g2 };
             var o3 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Buy, Email = "third", Gingerbread = g3 };
             var o4 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Sell, Email = "123", Gingerbread = g4 };
-            var o5 = new Order { CreationTime = DateTime.Now, DealOperation = Deal.Sell, Email = "1234", Gingerbread = g5 };
+            var o5 = new Order(Deal.Sell, g5);
 
             db.Gingerbreads.Add(g1);
             db.Gingerbreads.Add(g2);

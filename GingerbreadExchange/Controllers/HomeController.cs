@@ -73,6 +73,10 @@ namespace GingerbreadExchange.Controllers
                             Price = ord.Gingerbread.Price, Count = ord.Gingerbread.Count, BuyEmail = ord.Email, SellEmail = ord.Email};
                         db.Histories.Add(completedDeal);
                         db.Orders.Remove(ord); // удаляем из бд ордер, продукт должен удалиться автоматически
+                        if (ord.Gingerbread.Count == selected.Count)
+                        {
+                            //db.Orders.Remove(db.Orders.Where(t => t.GingerbreadId == sOrde));
+                        }
                         
                         break;
                     case false:

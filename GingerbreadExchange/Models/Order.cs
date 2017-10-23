@@ -15,19 +15,40 @@ namespace GingerbreadExchange.Models
 
     public class Order
     {
+        public Order()
+        { }
+
+        public Order(Order o)
+        {
+            Id = o.Id;
+            DealOperation = o.DealOperation;
+            GingerbreadId = o.GingerbreadId;
+            Gingerbread = o.Gingerbread;
+            CreationTime = o.CreationTime;
+            Email = o.Email;
+        }
+
+        public Order(Deal dealOperation, Gingerbread gingerbread, string email = "")
+        {
+            DealOperation = dealOperation;
+            GingerbreadId = gingerbread.Id;
+            Gingerbread = gingerbread;
+            CreationTime = DateTime.Now;
+            Email = email;
+        }
+
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public Deal DealOperation { get; set; }
 
-        public int GingerbreadId { get; set; }
+        public long GingerbreadId { get; set; }
 
-        [ForeignKey("GingerbreadId")]
         public Gingerbread Gingerbread { get; set; }
 
         public DateTime CreationTime { get; set; }
 
-        [System.ComponentModel.DefaultValue("")]
+        [System.ComponentModel.DefaultValue(" ")]
         public string Email { get; set; }
     }
 }
