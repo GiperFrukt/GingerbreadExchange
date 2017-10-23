@@ -72,7 +72,8 @@ namespace GingerbreadExchange.Models
             var properties = type.GetProperties(
             BindingFlags.Instance
             | BindingFlags.Public);
-            var tmp = properties.First(t => t.Name == string.Format("{0}s", typeof(T).Name));
+            string tableName = typeof(T).Name;
+            var tmp = properties.First(t => t.Name == (string.Format("{0}s", tableName)) || t.Name == (string.Format("{0}ies", tableName.Remove(tableName.Count() - 1))));
             targetTable = tmp.GetValue(db) as DbSet<T>;
 
             return targetTable;

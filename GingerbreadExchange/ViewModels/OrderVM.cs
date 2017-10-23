@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace GingerbreadExchange.Models
+namespace GingerbreadExchange.ViewModels
 {
-    public class OrderView
+    public class OrderVM
     {
         public double Price { get; set; }
 

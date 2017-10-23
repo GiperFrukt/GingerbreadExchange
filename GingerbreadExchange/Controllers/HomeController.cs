@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GingerbreadExchange.ViewModels;
 using GingerbreadExchange.Models;
 using GingerbreadExchange.Models.Services;
 
@@ -16,22 +17,37 @@ namespace GingerbreadExchange.Controllers
         public ActionResult Index()
         {
             var gingerbreads = GingerbreadService.QueryGingerbreads();
-            var orders = OrderService.QueryOrders();
+            var orders = OrderService.QueryOrders() as List<Order>;
             var histories = HistoryService.QueryHistories();
-
-            IEnumerable<OrderView> bov = db.Gingerbreads.Join(db.Orders.Where(t=>t.DealOperation == Deal.Buy) , g => g.Id, o => o.GingerbreadId, (g, o) => new OrderView // результат
+            var orderVMList = new List<OrderVM>();
+            //IEnumerable<OrderVM> buyOrderView = 
+            (orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price)).ToList().ForEach(t =>
             {
-                Price = g.Price,
-                Count = g.Count,
-                Email = o.Email
-            }).OrderByDescending(p => p.Price).ToList() ;
-            IEnumerable<OrderView> sov = db.Gingerbreads.Join(db.Orders.Where(t => t.DealOperation == Deal.Sell), g => g.Id, o => o.GingerbreadId, (g, o) => new OrderView // результат
+                orderVMList.Add(new OrderVM() { Count = t.Gingerbread.Count, Email = t.Email, Price = t.Gingerbread.Price });
+            });
+                
+                
+            //    db.Gingerbreads.Join(db.Orders.Where(t => t.DealOperation == Deal.Buy), g => g.Id, o => o.GingerbreadId, (g, o) => new OrderVM // результат
+            //{
+            //    Price = g.Price,
+            //    Count = g.Count,
+            //    Email = o.Email
+            //}).OrderByDescending(p => p.Price).ToList();
+
+
+            //IEnumerable<OrderVM> buyOrderView = db.Gingerbreads.Join(db.Orders.Where(t=>t.DealOperation == Deal.Buy) , g => g.Id, o => o.GingerbreadId, (g, o) => new OrderVM // результат
+            //{
+            //    Price = g.Price,
+            //    Count = g.Count,
+            //    Email = o.Email
+            //}).OrderByDescending(p => p.Price).ToList() ;
+            IEnumerable<OrderVM> sov = db.Gingerbreads.Join(db.Orders.Where(t => t.DealOperation == Deal.Sell), g => g.Id, o => o.GingerbreadId, (g, o) => new OrderVM // результат
             {
                 Price = g.Price,
                 Count = g.Count,
                 Email = o.Email
             }).OrderBy(p => p.Price).ToList();
-            ViewBag.BuyOrderView = bov;
+            //ViewBag.BuyOrderView = bov;
             ViewBag.SellOrderView = sov;
             ViewBag.Orders = orders;
             ViewBag.Histories = histories;
@@ -45,20 +61,20 @@ namespace GingerbreadExchange.Controllers
             var dealOp = (Deal)Enum.Parse(typeof(Deal), dealOperation);
             var order = new Order(dealOp, gb, email);
             OrderService.AddOrder(order);
-            //ExecuteOrder(ord, gb);
+            ExecuteOrder(order, gb);
             return Redirect("Index");
         }
 
         void ExecuteOrder(Order ord, Gingerbread gb)
         {
             //если покупаем
-            IEnumerable<OrderView> bov = db.Gingerbreads.Join(db.Orders.Where(t => t.DealOperation == Deal.Sell), g => g.Id, o => o.GingerbreadId, (g, o) => new OrderView // результат
+            IEnumerable<OrderVM> bov = db.Gingerbreads.Join(db.Orders.Where(t => t.DealOperation == Deal.Sell), g => g.Id, o => o.GingerbreadId, (g, o) => new OrderVM // результат
             {
                 Price = g.Price,
                 Count = g.Count,
                 Email = o.Email
             }).OrderBy(p => p.Price).ToList();
-            var selected = bov.Where(t => t.Price <= gb.Price) as List<OrderView>;
+            var selected = bov.Where(t => t.Price <= gb.Price) as List<OrderVM>;
             bool done = false;
             int i = 0;
             do

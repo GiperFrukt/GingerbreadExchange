@@ -35,7 +35,7 @@
 										@Html.TextBox("Count", "Количество")
 									</div>
 									<div class="col-md-4">
-										<p><button type="submit" name="action" value="buy">Ок</button></p>
+										<p><button type="submit">Ок</button></p>
 									</div>
 								</div>
 								<div class="row">
@@ -84,7 +84,8 @@
 					<td>
 						<div>
 							@using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
-							{
+                            {
+                                <input type="hidden" value="Sell" name="dealOperation" />
 								<div class="row">
 									<div class="col-md-4">
 										@Html.TextBox("Price", "Цена за шт.")
@@ -96,7 +97,7 @@
 										@Html.TextBox("Count", "Количество")
 									</div>
 									<div class="col-md-4">
-										<p><button type="submit" name="action" value="sell">Ок</button></p>
+										<p><button type="submit">Ок</button></p>
 									</div>
 								</div>
 								<div class="row">
