@@ -1,143 +1,178 @@
 ﻿@model GingerbreadExchange.ViewModels.IndexVM
 @{
-	Layout = null;
+    Layout = null;
 }
 
 <!DOCTYPE html>
 
 <html>
 <head>
-	<meta name="viewport" content="width=device-width" />
-	<title>Биржа пряников</title>
-	@Styles.Render("~/Content/css")
-	@Scripts.Render("~/bundles/modernizr")
+    <meta name="viewport" content="width=device-width" />
+    <title>Биржа пряников</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-	<div class="row">
-		<div class="col-md-4">
-			<table class="table table-bordered">
-				<tr>
-					<td><b>Купить</b></td>
-				</tr>
-				<tr>
-					<td>
-						<div>
-							@using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
+    <div class="row">
+        <div class="col-md-4">
+            <table class="table table-bordered">
+                <tr>
+                    <td><b>Купить</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            @using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
                             {
                                 <input type="hidden" value="Buy" name="dealOperation" />
-								<div class="row">
-									<div class="col-md-4">
-										@Html.TextBox("Price", "Цена за шт.")
-									</div>
-								</div>
-								<div class="row"><br></div>
-								<div class="row">
-									<div class="col-md-4">
-										@Html.TextBox("Count", "Количество")
-									</div>
-									<div class="col-md-4">
-										<p><button type="submit">Ок</button></p>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-4">
-										@Html.TextBox("Email", "Email")
-									</div>
-								</div>
-							}
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<br>
-						<b>Ордера на продажу</b>
-						<br>
-						<table class="table table-bordered">
-							<tbody>
-								<tr>
-									<th>Цена</th>
-									<th>Количество</th>
-									<th>Email</th>
-								</tr>
-								@foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).SellVMList)
-								{
-									<tr>
-										<td>@item.Price</td>
-										<td>@item.Count</td>
-										<td>@item.Email</td>
-									</tr>
-								}
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBox("Price", "Цена за шт.")
+                                    </div>
+                                </div>
+                                <div class="row"><br></div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBox("Count", "Количество")
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><button type="submit">Ок</button></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBox("Email", "Email")
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br>
+                        <b>Ордера на продажу</b>
+                        <br>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
+                                    <th>Email</th>
+                                </tr>
+                                @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).SellVMList)
+                                {
+                                    <tr>
+                                        <td>@item.Price</td>
+                                        <td>@item.Count</td>
+                                        <td>@item.Email</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
 
-		<div class="col-md-4 col-md-offset-4">
-			<table class="table table-bordered">
-				<tr>
-					<td><b>Продать</b></td>
-				</tr>
-				<tr>
-					<td>
-						<div>
-							@using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
+        <div class="col-md-4 col-md-offset-4">
+            <table class="table table-bordered">
+                <tr>
+                    <td><b>Продать</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            @using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
                             {
                                 <input type="hidden" value="Sell" name="dealOperation" />
-								<div class="row">
-									<div class="col-md-4">
-										@Html.TextBox("Price", "Цена за шт.")
-									</div>
-								</div>
-								<div class="row"><br></div>
-								<div class="row">
-									<div class="col-md-4">
-										@Html.TextBox("Count", "Количество")
-									</div>
-									<div class="col-md-4">
-										<p><button type="submit">Ок</button></p>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-md-4">
-										@Html.TextBox("Email", "Email")
-									</div>
-								</div>
-							}
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<br>
-						<b>Ордера на покупку</b>
-						<br>
-						<table class="table table-bordered">
-							<tbody>
-								<tr>
-									<th>Цена</th>
-									<th>Количество</th>
-									<th>Email</th>
-								</tr>
-								@foreach (var b in (Model as GingerbreadExchange.ViewModels.IndexVM).BuyVMList)
-								{
-									<tr>
-										<td>@b.Price</td>
-										<td>@b.Count</td>
-										<td>@b.Email</td>
-									</tr>
-								}
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</table>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBox("Price", "Цена за шт.")
+                                    </div>
+                                </div>
+                                <div class="row"><br></div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBox("Count", "Количество")
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p><button type="submit">Ок</button></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        @Html.TextBox("Email", "Email")
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <br>
+                        <b>Ордера на покупку</b>
+                        <br>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Цена</th>
+                                    <th>Количество</th>
+                                    <th>Email</th>
+                                </tr>
+                                @foreach (var b in (Model as GingerbreadExchange.ViewModels.IndexVM).BuyVMList)
+                                {
+                                    <tr>
+                                        <td>@b.Price</td>
+                                        <td>@b.Count</td>
+                                        <td>@b.Email</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
 
-		</div>
-	</div>
-	
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <br>
+            <b>Завершённые сделки</b>
+            <br>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th>Выполнено</th>
+                        <th>Дата К*</th>
+                        <th>Дата П*</th>
+                        <th>Цена</th>
+                        <th>Кол-во</th>
+                        <th>E-mail К</th>
+                        <th>E-mail П</th>
+                    </tr>
+                    @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).HistoryVMList)
+                    {
+                        <tr>
+                            <td>@item.DealTime</td>
+                            <td>@item.BuyOrderTime</td>
+                            <td>@item.SellOrderTime</td>
+                            <td>@item.Price</td>
+                            <td>@item.Count</td>
+                            <td>@item.BuyEmail</td>
+                            <td>@item.SellEmail</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+
 </body>
 </html>

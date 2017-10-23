@@ -18,21 +18,20 @@ namespace GingerbreadExchange.Controllers
         {
             var gingerbreads = GingerbreadService.QueryGingerbreads();
             var orders = OrderService.QueryOrders() as List<Order>;
-            var histories = HistoryService.QueryHistories();
+            var histories = HistoryService.QueryHistories() as List<History>;
 
             var buyOrderVMList = new List<OrderVM>();
-            (orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price)).ToList().ForEach(t =>
-            {
-                buyOrderVMList.Add(new OrderVM() { Count = t.Gingerbread.Count, Email = t.Email, Price = t.Gingerbread.Price });
-            });
+            (orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price)).ToList()
+                .ForEach(t => buyOrderVMList.Add(new OrderVM(t)));
 
             var sellOrderVMList = new List<OrderVM>();
-            (orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price)).ToList().ForEach(t =>
-            {
-                sellOrderVMList.Add(new OrderVM() { Count = t.Gingerbread.Count, Email = t.Email, Price = t.Gingerbread.Price });
-            });
+            (orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price)).ToList()
+                .ForEach(t =>sellOrderVMList.Add(new OrderVM(t)));
             
             var historyOrderVMList = new List<HistoryVM>();
+            histories.ToList().ForEach(t => historyOrderVMList.Add(new HistoryVM(t)));
+
+
             var indexVM = new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList, HistoryVMList = historyOrderVMList };
             return View(indexVM);
         }
@@ -43,49 +42,49 @@ namespace GingerbreadExchange.Controllers
             var dealOp = (Deal)Enum.Parse(typeof(Deal), dealOperation);
             var order = new Order(dealOp, gb, email);
             OrderService.AddOrder(order);
-            ExecuteOrder(order, gb);
+            ExecuteOrder(order);
             return Redirect("Index");
         }
 
-        void ExecuteOrder(Order ord, Gingerbread gb)
+        void ExecuteOrder(Order buy)
         {
-            ////если покупаем
-            //IEnumerable<OrderVM> bov = db.Gingerbreads.Join(db.Orders.Where(t => t.DealOperation == Deal.Sell), g => g.Id, o => o.GingerbreadId, (g, o) => new OrderVM // результат
-            //{
-            //    Price = g.Price,
-            //    Count = g.Count,
-            //    Email = o.Email
-            //}).OrderBy(p => p.Price).ToList();
-            //var selected = bov.Where(t => t.Price <= gb.Price) as List<OrderVM>;
-            //bool done = false;
-            //int i = 0;
-            //do
-            //{
-            //    var sOrder = selected.ElementAt(i);
-            //    switch (ord.Gingerbread.Count < selected.Count)
-            //    {
-            //        case true:
-            //            // TODO извлечь из БД не продукт, а сделку с этим продуктом !!!!!!!! исправить дату создания заявки на покупку и имэйл продавца
-            //            var completedDeal = new History { DealTime = DateTime.Now, BuyOrderTime = ord.CreationTime, SellOrderTime = DateTime.Now,
-            //                Price = ord.Gingerbread.Price, Count = ord.Gingerbread.Count, BuyEmail = ord.Email, SellEmail = ord.Email};
-            //            db.Histories.Add(completedDeal);
-            //            db.Orders.Remove(ord); // удаляем из бд ордер, продукт должен удалиться автоматически
-            //            if (ord.Gingerbread.Count == selected.Count)
-            //            {
-            //                //db.Orders.Remove(db.Orders.Where(t => t.GingerbreadId == sOrde));
-            //            }
-                        
-            //            break;
-            //        case false:
-            //            break;
-            //    }
-            //} while (!done);
+            
+            //если покупаем
+            var orders = OrderService.QueryOrders() as List<Order>;
+            var o = orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price).ToList();
 
-            //db.SaveChanges();
-            //foreach (var a in selected)
-            //{
+            // выбрали тех, у кого можем купить, результаты отсортировали по возрастанию цены
+            var selected = o.Where(t => t.Gingerbread.Price <= buy.Gingerbread.Price).ToList();
+            bool done = false;
+            int i = 0;
+            if (selected != null)
+            {
+                do
+                {
+                    var sell = selected.ElementAt(i);
+                    switch (buy.Gingerbread.Count == sell.Gingerbread.Count)
+                    {
+                        case true:
 
-            //}
+                            var completedDeal = new History(buy, sell);
+                            HistoryService.AddHistory(completedDeal);
+                            OrderService.DeleteOrder(buy);
+                            OrderService.DeleteOrder(sell);
+                            //if (buy.Gingerbread.Count == selected.Count)
+                            //{
+                            //    //db.Orders.Remove(db.Orders.Where(t => t.GingerbreadId == sOrde));
+                            //}
+
+                            break;
+                        case false:
+                            break;
+                    }
+                } while (!done);
+            }
+            foreach (var a in selected)
+            {
+
+            }
         }
         
     }

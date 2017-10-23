@@ -36,12 +36,9 @@ namespace GingerbreadExchange.Models
         {
             public OrderConfiguration()
             {
-                //this.HasKey
                 this.Property(t => t.CreationTime).IsRequired();
                 this.Property(t => t.DealOperation).IsRequired();
                 this.Property(t => t.Email).HasMaxLength(50);
-                //this.Property(t => t.GingerbreadId).IsRequired();
-                //this.HasRequired(t => t.Gingerbread).WithRequiredPrincipal(c => c).WillCascadeOnDelete(false);
             }
         }
 

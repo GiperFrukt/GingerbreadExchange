@@ -31,7 +31,5 @@ namespace GingerbreadExchange.Models
         public int Count { get; set; }
 
         public float Price { get; set; }
-
-        //public Order Order { get; set; }
     }
 }
