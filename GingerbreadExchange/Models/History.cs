@@ -22,8 +22,8 @@ namespace GingerbreadExchange.Models
             BuyOrderTime = buyOrder.CreationTime;
             SellOrderTime = sellOrder.CreationTime;
             Price = price;
-            BuyEmail = buyOrder.Email;
-            SellEmail = sellOrder.Email;
+            BuyEmail = buyOrder.Email.Length == 0 ? "--" : buyOrder.Email;
+            SellEmail = sellOrder.Email.Length == 0 ? "--" : sellOrder.Email;
         }
 
         [Key]
