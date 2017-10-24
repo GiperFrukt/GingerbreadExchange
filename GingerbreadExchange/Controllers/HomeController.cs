@@ -11,9 +11,6 @@ namespace GingerbreadExchange.Controllers
 {
     public class HomeController : Controller
     {
-        ExchangeContext db = new ExchangeContext();
-
-        //[HttpGet]
         public ActionResult Index()
         {
             var gingerbreads = GingerbreadService.QueryGingerbreads();
@@ -46,53 +43,101 @@ namespace GingerbreadExchange.Controllers
             return Redirect("Index");
         }
 
-        void ExecuteOrder(Order buy)
+        void ExecuteOrder(Order ord)
         {
+            if (ord.DealOperation == Deal.Buy)
+            {
+                ExecuteBuyOrder(ord);
+            }
+            else //если продаём
+            {
+                ExecuteSellOrder(ord);
+            }
+        }
 
-            //если покупаем
+        void ExecuteBuyOrder(Order buyOrd)
+        {
             var orders = OrderService.QueryOrders() as List<Order>;
-            var o = orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price).ToList();
 
+            var temp = orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price).ToList();
             // выбрали тех, у кого можем купить, результаты отсортировали по возрастанию цены
-            var selected = o.Where(t => t.Gingerbread.Price <= buy.Gingerbread.Price).ToList();
-            if (selected != null)
+            var selected = temp.Where(t => t.Gingerbread.Price <= buyOrd.Gingerbread.Price).ToList();
+
+
+            if (selected.Count != 0)
             {
                 bool done = false;
                 int i = 0;
                 do
                 {
-                    var sell = selected.ElementAt(i);
-                    if (buy.Gingerbread.Count == sell.Gingerbread.Count)
+                    var sellOrd = selected.ElementAt(i);
+                    var completedDeal = new History(buyOrd, sellOrd, sellOrd.Gingerbread.Price);
+                    HistoryService.AddHistory(completedDeal);
+
+                    if (buyOrd.Gingerbread.Count == sellOrd.Gingerbread.Count)
                     {
-                        var completedDeal = new History(buy, sell);
-                        HistoryService.AddHistory(completedDeal);
-                        OrderService.DeleteOrder(buy);
-                        OrderService.DeleteOrder(sell);
+                        OrderService.DeleteOrder(buyOrd);
+                        OrderService.DeleteOrder(sellOrd);
                         done = true;
                     }
-                    else if (buy.Gingerbread.Count < sell.Gingerbread.Count)
+                    else if (buyOrd.Gingerbread.Count < sellOrd.Gingerbread.Count)
                     {
-                        var completedDeal = new History(buy, sell);
-                        HistoryService.AddHistory(completedDeal);
-                        sell.Gingerbread.Count = sell.Gingerbread.Count - buy.Gingerbread.Count;
-                        GingerbreadService.UpdateGingerbread(sell.Gingerbread);
-                        OrderService.DeleteOrder(buy);
+                        sellOrd.Gingerbread.Count = sellOrd.Gingerbread.Count - buyOrd.Gingerbread.Count;
+                        GingerbreadService.UpdateGingerbread(sellOrd.Gingerbread);
+                        OrderService.DeleteOrder(buyOrd);
                         done = true;
                     }
                     else // if (buy.Gingerbread.Count > sell.Gingerbread.Count)
                     {
-                        var completedDeal = new History(buy, sell);
-                        HistoryService.AddHistory(completedDeal);
-                        buy.Gingerbread.Count = buy.Gingerbread.Count - sell.Gingerbread.Count;
-                        GingerbreadService.UpdateGingerbread(buy.Gingerbread);
-                        OrderService.DeleteOrder(sell);
+                        buyOrd.Gingerbread.Count = buyOrd.Gingerbread.Count - sellOrd.Gingerbread.Count;
+                        GingerbreadService.UpdateGingerbread(buyOrd.Gingerbread);
+                        OrderService.DeleteOrder(sellOrd);
                     }
                     i++;
-                } while (!done || selected.Count > i);
+                } while (selected.Count > i && !done);
             }
-            foreach (var a in selected)
-            {
+        }
 
+        void ExecuteSellOrder(Order sellOrd)
+        {
+            var orders = OrderService.QueryOrders() as List<Order>;
+
+            var temp = orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price).ToList();
+            // выбрали тех, у кого можем купить, результаты отсортировали по возрастанию цены
+            var selected = temp.Where(t => t.Gingerbread.Price >= sellOrd.Gingerbread.Price).ToList();
+
+
+            if (selected.Count != 0)
+            {
+                bool done = false;
+                int i = 0;
+                do
+                {
+                    var bOrd = selected.ElementAt(i);
+                    var completedDeal = new History(bOrd, sellOrd, bOrd.Gingerbread.Price);
+                    HistoryService.AddHistory(completedDeal);
+
+                    if (sellOrd.Gingerbread.Count == bOrd.Gingerbread.Count)
+                    {
+                        OrderService.DeleteOrder(bOrd);
+                        OrderService.DeleteOrder(sellOrd);
+                        done = true;
+                    }
+                    else if (sellOrd.Gingerbread.Count < bOrd.Gingerbread.Count)
+                    {
+                        bOrd.Gingerbread.Count = bOrd.Gingerbread.Count - sellOrd.Gingerbread.Count;
+                        GingerbreadService.UpdateGingerbread(bOrd.Gingerbread);
+                        OrderService.DeleteOrder(sellOrd);
+                        done = true;
+                    }
+                    else // if (sellOrd.Gingerbread.Count > bOrd.Gingerbread.Count)
+                    {
+                        sellOrd.Gingerbread.Count = sellOrd.Gingerbread.Count - bOrd.Gingerbread.Count;
+                        GingerbreadService.UpdateGingerbread(sellOrd.Gingerbread);
+                        OrderService.DeleteOrder(bOrd);
+                    }
+                    i++;
+                } while (selected.Count > i && !done);
             }
         }
 

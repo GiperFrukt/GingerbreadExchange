@@ -19,6 +19,7 @@ namespace GingerbreadExchange.Models.Services
         public static bool DeleteOrder(Order o)
         {
             var sqlBiulder = new SqlBuilder();
+            GingerbreadService.DeleteGingerbread(o.Gingerbread);
             return sqlBiulder.Delete<Order>(o);
         }
 

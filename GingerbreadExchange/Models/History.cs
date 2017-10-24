@@ -12,17 +12,17 @@ namespace GingerbreadExchange.Models
         public History()
         { }
 
-        public History(Order buyOder, Order sellOrder)
+        public History(Order buyOrder, Order sellOrder, double price)
         {
             var sellCount = sellOrder.Gingerbread.Count;
-            var buyCount = buyOder.Gingerbread.Count;
+            var buyCount = buyOrder.Gingerbread.Count;
 
             Count = buyCount <= sellCount ? buyCount : sellCount;
             DealTime = DateTime.Now;
-            BuyOrderTime = buyOder.CreationTime;
+            BuyOrderTime = buyOrder.CreationTime;
             SellOrderTime = sellOrder.CreationTime;
-            Price = sellOrder.Gingerbread.Price;
-            BuyEmail = buyOder.Email;
+            Price = price;
+            BuyEmail = buyOrder.Email;
             SellEmail = sellOrder.Email;
         }
 
