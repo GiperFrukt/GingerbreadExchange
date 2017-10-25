@@ -34,14 +34,45 @@ namespace GingerbreadExchange.Controllers
         }
 
         [HttpPost]
-        public ActionResult BuyOrder(string dealOperation, Gingerbread gb, string email)
+        public ActionResult Order(IndexVM index)
         {
-            var dealOp = (Deal)Enum.Parse(typeof(Deal), dealOperation);
-            var order = new Order(dealOp, gb, email);
+            // TODO обернуть в другой поток
+
+            //if (ModelState.IsValid)
+            //{
+            //    var a = 5;
+            //}
+            //else
+            //{
+            //    var b = 0;
+            //}
+
+            //var dealOp = (Deal)Enum.Parse(typeof(Deal), dealOperation);
+            //var order = new Order(dealOp, gb, email);
+            var gingerbread = new Gingerbread(count: index.GingerbreadVM.Count, price: index.GingerbreadVM.Price);
+            var order = new Order(email: index.OrderVM.Email, gingerbread: gingerbread);
             OrderService.AddOrder(order);
-            ExecuteOrder(order);
+            //ExecuteOrder(order);
             return Redirect("Index");
         }
+
+        //[HttpPost]
+        //public ActionResult BuyOrder(string dealOperation, [Bind(Include = "Id,Count,Price")] Gingerbread gb, string email)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var a = 5;
+        //    }
+        //    else
+        //    {
+        //        var b = 0;
+        //    }
+        //    var dealOp = (Deal)Enum.Parse(typeof(Deal), dealOperation);
+        //    var order = new Order(dealOp, gb, email);
+        //    OrderService.AddOrder(order);
+        //    ExecuteOrder(order);
+        //    return Redirect("Index");
+        //}
 
         void ExecuteOrder(Order ord)
         {

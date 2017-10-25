@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace GingerbreadExchange.Models
 {
@@ -27,7 +28,7 @@ namespace GingerbreadExchange.Models
 
         [Key]
         public long Id { get; set; }
-
+        
         public int Count { get; set; }
 
         public float Price { get; set; }

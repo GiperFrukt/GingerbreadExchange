@@ -163,6 +163,7 @@
     <Compile Include="Models\Services\GingerbreadService.cs" />
     <Compile Include="Models\Services\HistoryService.cs" />
     <Compile Include="Models\Services\OrderService.cs" />
+    <Compile Include="ViewModels\GingerbreadVM.cs" />
     <Compile Include="ViewModels\IndexVM.cs" />
     <Compile Include="ViewModels\OrderVM.cs" />
     <Compile Include="Models\ExchangeContext.cs" />

@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Биржа пряников</title>
+    <title>Биржа пряников 2.0</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -22,26 +22,27 @@
                 <tr>
                     <td>
                         <div>
-                            @using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
+                            @using (Html.BeginForm("Order", "Home", FormMethod.Post))
                             {
-                                <input type="hidden" value="Buy" name="dealOperation" />
                                 <div class="row">
                                     <div class="col-md-4">
-                                        @Html.TextBox("Price", "Цена за шт.")
+                                        @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
                                     </div>
                                 </div>
                                 <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        @Html.TextBox("Count", "Количество")
+                                        @Html.TextBoxFor(m => m.GingerbreadVM.Count, new { @class = "form-control", @placeholder = "Логин" })
                                     </div>
                                     <div class="col-md-4">
                                         <p><button type="submit">Ок</button></p>
                                     </div>
                                 </div>
+                                <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        @Html.TextBox("Email", "Email")
+                                        <input type="hidden" value="Buy" name="dealOperation" />
+                                        @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
                                     </div>
                                 </div>
                             }
@@ -63,8 +64,8 @@
                                 @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).SellVMList)
                                 {
                                     <tr>
-                                        <td>@item.Price</td>
-                                        <td>@item.Count</td>
+                                        <td>@item.GingerbreadVM.Price</td>
+                                        <td>@item.GingerbreadVM.Count</td>
                                         <td>@item.Email</td>
                                     </tr>
                                 }
@@ -84,26 +85,27 @@
                 <tr>
                     <td>
                         <div>
-                            @using (Html.BeginForm("BuyOrder", "Home", FormMethod.Post))
+                            @using (Html.BeginForm("Order", "Home", FormMethod.Post))
                             {
-                                <input type="hidden" value="Sell" name="dealOperation" />
                                 <div class="row">
                                     <div class="col-md-4">
-                                        @Html.TextBox("Price", "Цена за шт.")
+                                        @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
                                     </div>
                                 </div>
                                 <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        @Html.TextBox("Count", "Количество")
+                                        @Html.TextBoxFor(m => m.GingerbreadVM.Count, new { @class = "form-control", @placeholder = "Логин" })
                                     </div>
                                     <div class="col-md-4">
                                         <p><button type="submit">Ок</button></p>
                                     </div>
                                 </div>
+                                <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        @Html.TextBox("Email", "Email")
+                                        <input type="hidden" value="Sell" name="dealOperation" />
+                                        @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
                                     </div>
                                 </div>
                             }
@@ -125,8 +127,8 @@
                                 @foreach (var b in (Model as GingerbreadExchange.ViewModels.IndexVM).BuyVMList)
                                 {
                                     <tr>
-                                        <td>@b.Price</td>
-                                        <td>@b.Count</td>
+                                        <td>@b.GingerbreadVM.Price</td>
+                                        <td>@b.GingerbreadVM.Count</td>
                                         <td>@b.Email</td>
                                     </tr>
                                 }

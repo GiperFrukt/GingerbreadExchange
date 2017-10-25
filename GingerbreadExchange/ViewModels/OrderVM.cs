@@ -8,17 +8,20 @@ namespace GingerbreadExchange.ViewModels
 {
     public class OrderVM
     {
-        public double Price { get; set; }
+        public Deal DealOperation { get; set; }
 
-        public int Count { get; set; }
+        public GingerbreadVM GingerbreadVM { get; set; }
 
         public string Email { get; set; }
 
         public OrderVM(Order ord)
         {
-            Price = ord.Gingerbread.Price;
-            Count = ord.Gingerbread.Count;
             Email = ord.Email;
+            DealOperation = ord.DealOperation;
+            GingerbreadVM = new GingerbreadVM(ord.Gingerbread);
         }
+
+        public OrderVM()
+        { }
     }
 }

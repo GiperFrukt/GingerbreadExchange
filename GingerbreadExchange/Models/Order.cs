@@ -27,9 +27,22 @@ namespace GingerbreadExchange.Models
             Email = o.Email;
         }
 
+        /// <summary>
+        /// Конструктор для инициализации БД
+        /// </summary>
+        /// <param name="dealOperation"></param>
+        /// <param name="gingerbread"></param>
+        /// <param name="email"></param>
         public Order(Deal dealOperation, Gingerbread gingerbread, string email = "")
         {
             DealOperation = dealOperation;
+            Gingerbread = gingerbread;
+            CreationTime = DateTime.Now;
+            Email = email;
+        }
+
+        public Order(Gingerbread gingerbread, string email = "")
+        {
             Gingerbread = gingerbread;
             CreationTime = DateTime.Now;
             Email = email;
