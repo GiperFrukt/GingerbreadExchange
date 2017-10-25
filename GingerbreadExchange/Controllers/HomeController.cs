@@ -34,25 +34,18 @@ namespace GingerbreadExchange.Controllers
         }
 
         [HttpPost]
-        public ActionResult Order(IndexVM index)
+        public ActionResult Order([Bind(Include = "GingerbreadVM, OrderVM")] IndexVM index)
         {
             // TODO обернуть в другой поток
 
-            //if (ModelState.IsValid)
-            //{
-            //    var a = 5;
-            //}
-            //else
-            //{
-            //    var b = 0;
-            //}
-
-            //var dealOp = (Deal)Enum.Parse(typeof(Deal), dealOperation);
-            //var order = new Order(dealOp, gb, email);
-            var gingerbread = new Gingerbread(count: index.GingerbreadVM.Count, price: index.GingerbreadVM.Price);
-            var order = new Order(email: index.OrderVM.Email, gingerbread: gingerbread);
-            OrderService.AddOrder(order);
-            //ExecuteOrder(order);
+            if (ModelState.IsValid)
+            {
+                var gingerbread = new Gingerbread(count: index.GingerbreadVM.Count, price: index.GingerbreadVM.Price);
+                var order = new Order(email: index.OrderVM.Email, gingerbread: gingerbread);
+                OrderService.AddOrder(order);
+                ExecuteOrder(order);
+            }
+            
             return Redirect("Index");
         }
 

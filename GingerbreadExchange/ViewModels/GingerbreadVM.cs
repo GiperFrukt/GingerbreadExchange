@@ -14,8 +14,10 @@ namespace GingerbreadExchange.ViewModels
         public long Id { get; set; }
 
         ////[Required(ErrorMessage = "Поле должно быть установлено")]
+        [Required]
         public int Count { get; set; }
 
+        [Required]
         public float Price { get; set; }
 
         public GingerbreadVM(int count, float price)
