@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GingerbreadExchange.ViewModels;
 
 namespace GingerbreadExchange.Models
 {
@@ -36,13 +37,6 @@ namespace GingerbreadExchange.Models
         public Order(Deal dealOperation, Gingerbread gingerbread, string email = "")
         {
             DealOperation = dealOperation;
-            Gingerbread = gingerbread;
-            CreationTime = DateTime.Now;
-            Email = email;
-        }
-
-        public Order(Gingerbread gingerbread, string email = "")
-        {
             Gingerbread = gingerbread;
             CreationTime = DateTime.Now;
             Email = email;

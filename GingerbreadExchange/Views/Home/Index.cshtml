@@ -24,6 +24,7 @@
                         <div>
                             @using (Html.BeginForm("Order", "Home", FormMethod.Post))
                             {
+                                <input type="hidden" value="Buy" name="dealOperation" />
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
@@ -41,7 +42,6 @@
                                 <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <input type="hidden" value="Buy" name="dealOperation" />
                                         @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
                                     </div>
                                 </div>
@@ -87,6 +87,7 @@
                         <div>
                             @using (Html.BeginForm("Order", "Home", FormMethod.Post))
                             {
+                                <input type="hidden" value="Sell" name="dealOperation" />
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
@@ -104,7 +105,6 @@
                                 <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-5">
-                                        <input type="hidden" value="Sell" name="dealOperation" />
                                         @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
                                     </div>
                                 </div>
