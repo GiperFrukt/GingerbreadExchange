@@ -6,6 +6,9 @@ using System.Web;
 
 namespace GingerbreadExchange.Models.Services
 {
+    /// <summary>
+    /// Сервис взаимодействия модели продукта с БД
+    /// </summary>
     public class GingerbreadService
     {
         public static IEnumerable QueryGingerbreads()

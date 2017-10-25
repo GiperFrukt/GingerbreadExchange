@@ -7,11 +7,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GingerbreadExchange.ViewModels
 {
+    /// <summary>
+    /// Отображение Заказа и продукта
+    /// </summary>
     public class OrderVM
     {
-        
+        /// <summary>
+        /// Вид операции: покупка/продажа
+        /// </summary>
         public Deal DealOperation { get; set; }
 
+        /// <summary>
+        /// Продаваемый продукт
+        /// </summary>
         public GingerbreadVM GingerbreadVM { get; set; }
 
         [Display(Name = "E-mail")]

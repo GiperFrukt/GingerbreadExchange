@@ -9,6 +9,9 @@ using GingerbreadExchange.Models;
 
 namespace GingerbreadExchange.ViewModels
 {
+    /// <summary>
+    /// Отображение продукта
+    /// </summary>
     public class GingerbreadVM
     {
         [Required]

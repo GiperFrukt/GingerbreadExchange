@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GingerbreadExchange.ViewModels
 {
+    /// <summary>
+    /// Отображение истории совершённых операций для именования соответствующей таблицы на странице
+    /// </summary>
     public class HistoryVM
     {
         [Display(Name = "Выполнено")]

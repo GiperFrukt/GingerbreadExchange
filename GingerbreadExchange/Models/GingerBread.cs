@@ -8,6 +8,9 @@ using System.Web.Mvc;
 
 namespace GingerbreadExchange.Models
 {
+    /// <summary>
+    /// Модель продукта
+    /// </summary>
     public class Gingerbread
     {
         public Gingerbread()

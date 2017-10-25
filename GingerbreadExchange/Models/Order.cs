@@ -8,12 +8,18 @@ using GingerbreadExchange.ViewModels;
 
 namespace GingerbreadExchange.Models
 {
+    /// <summary>
+    /// Тип совершаемой операции
+    /// </summary>
     public enum Deal
     {
         Buy,
         Sell
     }
 
+    /// <summary>
+    /// Модель Заказа
+    /// </summary>
     public class Order
     {
         public Order()

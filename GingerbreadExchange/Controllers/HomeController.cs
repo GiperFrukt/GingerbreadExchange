@@ -109,7 +109,7 @@ namespace GingerbreadExchange.Controllers
             var orders = OrderService.QueryOrders() as List<Order>;
 
             var temp = orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price).ToList();
-            // выбрали тех, у кого можем купить, результаты отсортировали по возрастанию цены
+            // выбрали тех, уому можем продать, результаты отсортировали по убыванию цены
             var selected = temp.Where(t => t.Gingerbread.Price >= sellOrd.Gingerbread.Price).ToList();
 
 

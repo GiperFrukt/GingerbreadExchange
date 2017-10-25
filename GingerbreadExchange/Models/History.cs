@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GingerbreadExchange.Models
 {
+    /// <summary>
+    /// Модель истории завершённых сделок
+    /// </summary>
     public class History
     {
         public History()

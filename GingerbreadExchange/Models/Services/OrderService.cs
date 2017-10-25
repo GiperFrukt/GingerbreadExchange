@@ -7,6 +7,9 @@ using System.Web;
 
 namespace GingerbreadExchange.Models.Services
 {
+    /// <summary>
+    /// Сервис взаимодействия модели Заказа с БД
+    /// </summary>
     public class OrderService
     {
         public static IEnumerable QueryOrders()

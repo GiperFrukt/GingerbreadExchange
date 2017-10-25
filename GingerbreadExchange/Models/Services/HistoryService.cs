@@ -6,6 +6,9 @@ using System.Web;
 
 namespace GingerbreadExchange.Models.Services
 {
+    /// <summary>
+    /// Сервис взаимодействия модели завершённых сделок с БД
+    /// </summary>
     public class HistoryService
     {
         public static IEnumerable QueryHistories()

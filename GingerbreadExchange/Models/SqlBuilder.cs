@@ -9,10 +9,11 @@ using System.Web;
 
 namespace GingerbreadExchange.Models
 {
+    /// <summary>
+    /// Класс взаимодействия с БД
+    /// </summary>
     public class SqlBuilder
     {
-        //private static readonly string _dataSource = "ExchangeDb";
-
         ExchangeContext db = new ExchangeContext();
 
         public bool Update<T>(T valueToUpdate) where T : class
@@ -64,6 +65,10 @@ namespace GingerbreadExchange.Models
             return table;
         }
 
+        /// <summary>
+        /// Нахождение определённой таблицы в контексте в зависимости от модели таблицы
+        /// </summary>
+        /// <typeparam name="T">Класс модели таблицы</typeparam>
         private DbSet<T> FindTable<T>() where T : class
         {
             DbSet<T> targetTable = null;
