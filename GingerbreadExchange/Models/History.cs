@@ -12,7 +12,7 @@ namespace GingerbreadExchange.Models
         public History()
         { }
 
-        public History(Order buyOrder, Order sellOrder, double price)
+        public History(Order buyOrder, Order sellOrder, decimal price)
         {
             var sellCount = sellOrder.Gingerbread.Count;
             var buyCount = buyOrder.Gingerbread.Count;
@@ -37,7 +37,7 @@ namespace GingerbreadExchange.Models
 
         public int Count { get; set; }
 
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         public string BuyEmail { get; set; }
 

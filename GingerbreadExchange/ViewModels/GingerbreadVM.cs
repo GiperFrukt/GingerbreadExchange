@@ -11,16 +11,15 @@ namespace GingerbreadExchange.ViewModels
 {
     public class GingerbreadVM
     {
-        public long Id { get; set; }
-
-        ////[Required(ErrorMessage = "Поле должно быть установлено")]
         [Required]
+        [Display(Name = "Количество")]
         public int Count { get; set; }
 
         [Required]
-        public float Price { get; set; }
+        [Display(Name = "Цена")]
+        public decimal Price { get; set; }
 
-        public GingerbreadVM(int count, float price)
+        public GingerbreadVM(int count, decimal price)
         {
             Count = count;
             Price = price;
@@ -31,7 +30,6 @@ namespace GingerbreadExchange.ViewModels
             Count = gb.Count;
             Price = gb.Price;
         }
-
 
         public GingerbreadVM()
         { }

@@ -3,23 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using GingerbreadExchange.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace GingerbreadExchange.ViewModels
 {
     public class HistoryVM
     {
+        [Display(Name = "Выполнено")]
         public DateTime DealTime { get; set; }
 
+        [Display(Name = "Дата К*")]
         public DateTime BuyOrderTime { get; set; }
 
+        [Display(Name = "Дата П*")]
         public DateTime SellOrderTime { get; set; }
 
+        [Display(Name = "Цена")]
+        public decimal Price { get; set; }
+
+        [Display(Name = "Кол-во")]
         public int Count { get; set; }
 
-        public double Price { get; set; }
-
+        [Display(Name = "E-mail К")]
         public string BuyEmail { get; set; }
 
+        [Display(Name = "E-mail П")]
         public string SellEmail { get; set; }
 
         public HistoryVM(History hist)

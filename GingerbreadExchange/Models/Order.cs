@@ -59,7 +59,7 @@ namespace GingerbreadExchange.Models
 
         public string Email { get; set; }
 
-        [NotMapped]
-        public Gingerbread GetGingerbread { get { return Gingerbread; } set { } }
+        //[NotMapped]
+        //public Gingerbread GetGingerbread { get { return Gingerbread; } set { } }
     }
 }

@@ -20,7 +20,7 @@ namespace GingerbreadExchange.Models
             Price = gb.Price;
         }
 
-        public Gingerbread(int count, float price)
+        public Gingerbread(int count, decimal price)
         {
             Count = count;
             Price = price;
@@ -31,6 +31,6 @@ namespace GingerbreadExchange.Models
         
         public int Count { get; set; }
 
-        public float Price { get; set; }
+        public decimal Price { get; set; }
     }
 }

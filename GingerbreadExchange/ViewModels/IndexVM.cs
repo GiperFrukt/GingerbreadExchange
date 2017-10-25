@@ -18,5 +18,7 @@ namespace GingerbreadExchange.ViewModels
 
         [Required]
         public OrderVM OrderVM { get; set; }
+
+        public HistoryVM HistoryVM { get; }
     }
 }
