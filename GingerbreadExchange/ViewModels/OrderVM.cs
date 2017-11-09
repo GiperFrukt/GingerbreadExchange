@@ -23,7 +23,7 @@ namespace GingerbreadExchange.ViewModels
         public GingerbreadVM GingerbreadVM { get; set; }
 
         [Display(Name = "E-mail")]
-        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}")]
+        [RegularExpression(@"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}", ErrorMessage = "Не корректный адрес")]
         public string Email { get; set; }
 
         public OrderVM(Order ord)

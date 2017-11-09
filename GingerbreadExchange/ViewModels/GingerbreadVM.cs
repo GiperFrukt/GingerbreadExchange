@@ -16,10 +16,12 @@ namespace GingerbreadExchange.ViewModels
     {
         [Required]
         [Display(Name = "Количество")]
+        [Range(1, int.MaxValue, ErrorMessage = "Недопустимое количество")]
         public int Count { get; set; }
 
         [Required]
         [Display(Name = "Цена")]
+        [Range(typeof(decimal), "0", "9999999999999", ErrorMessage = "Недопустимая цена")]
         public decimal Price { get; set; }
 
         public GingerbreadVM(int count, decimal price)

@@ -11,11 +11,11 @@ namespace GingerbreadExchange.Models.Services
     /// </summary>
     public class HistoryService
     {
-        public static IEnumerable QueryHistories()
+        public static IList QueryHistories()
         {
             var sqlBiulder = new SqlBuilder();
-            var result = sqlBiulder.Select<History>();
-            return result.ToList();
+            var result = sqlBiulder.Select<History>().ToList();
+            return result;
         }
 
         public static bool DeleteHistory(History h)

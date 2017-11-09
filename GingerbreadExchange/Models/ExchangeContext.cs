@@ -9,7 +9,7 @@ namespace GingerbreadExchange.Models
 {
     public class ExchangeContext : DbContext
     {
-        public ExchangeContext() : base("ExchangeDb")
+        public ExchangeContext()
         { }
 
         public DbSet<Gingerbread> Gingerbreads { get; set; }

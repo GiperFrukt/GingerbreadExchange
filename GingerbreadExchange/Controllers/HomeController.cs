@@ -13,28 +13,14 @@ namespace GingerbreadExchange.Controllers
     {
         public ActionResult Index()
         {
-            var gingerbreads = GingerbreadService.QueryGingerbreads();
-            var orders = OrderService.QueryOrders() as List<Order>;
-            var histories = HistoryService.QueryHistories() as List<History>;
-
-            var buyOrderVMList = new List<OrderVM>();
-            (orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price)).ToList()
-                .ForEach(t => buyOrderVMList.Add(new OrderVM(t)));
-
-            var sellOrderVMList = new List<OrderVM>();
-            (orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price)).ToList()
-                .ForEach(t => sellOrderVMList.Add(new OrderVM(t)));
-
-            var historyOrderVMList = new List<HistoryVM>();
-            histories.ToList().ForEach(t => historyOrderVMList.Add(new HistoryVM(t)));
-
-
-            var indexVM = new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList, HistoryVMList = historyOrderVMList };
+            var indexVM = GetCompositeModel();
             return View(indexVM);
         }
 
+        
+
         [HttpPost]
-        public ActionResult Order([Bind(Include = "GingerbreadVM, OrderVM")] IndexVM index, string dealOperation)
+        public ActionResult Index([Bind(Include = "GingerbreadVM, OrderVM")] IndexVM index, string dealOperation)
         {
             if (ModelState.IsValid)
             {
@@ -45,8 +31,8 @@ namespace GingerbreadExchange.Controllers
                 
                 ExecuteOrder(order);
             }
-
-            return Redirect("Index");
+            var compIndex = GetCompositeModel();
+            return View(compIndex);
         }
 
         void ExecuteOrder(Order ord)
@@ -145,6 +131,23 @@ namespace GingerbreadExchange.Controllers
                     i++;
                 } while (selected.Count > i && !done);
             }
+        }
+
+        IndexVM GetCompositeModel()
+        {
+            var gingerbreads = GingerbreadService.QueryGingerbreads() as List<Gingerbread>;
+            var orders = OrderService.QueryOrders() as List<Order>;
+            var histories = HistoryService.QueryHistories() as List<History>;
+
+            var buyOrderVMList = (orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price))
+                .Select(t => new OrderVM(t)).ToList();
+
+            var sellOrderVMList = (orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price))
+                .Select(t => new OrderVM(t)).ToList();
+
+            var historyOrderVMList = histories.Select(t => new HistoryVM(t)).ToList();
+
+            return new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList, HistoryVMList = historyOrderVMList };
         }
 
     }

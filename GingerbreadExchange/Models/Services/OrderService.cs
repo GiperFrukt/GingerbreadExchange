@@ -12,7 +12,7 @@ namespace GingerbreadExchange.Models.Services
     /// </summary>
     public class OrderService
     {
-        public static IEnumerable QueryOrders()
+        public static IList QueryOrders()
         {
             var sqlBiulder = new SqlBuilder();
             var result = sqlBiulder.Select<Order>();

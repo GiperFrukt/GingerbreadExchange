@@ -71,17 +71,7 @@ namespace GingerbreadExchange.Models
         /// <typeparam name="T">Класс модели таблицы</typeparam>
         private DbSet<T> FindTable<T>() where T : class
         {
-            DbSet<T> targetTable = null;
-
-            var type = typeof(ExchangeContext);
-            var properties = type.GetProperties(
-            BindingFlags.Instance
-            | BindingFlags.Public);
-            string tableName = typeof(T).Name;
-            var tmp = properties.First(t => t.Name == (string.Format("{0}s", tableName)) || t.Name == (string.Format("{0}ies", tableName.Remove(tableName.Count() - 1))));
-            targetTable = tmp.GetValue(db) as DbSet<T>;
-
-            return targetTable;
+            return db.Set<T>();
         }
     }
 }

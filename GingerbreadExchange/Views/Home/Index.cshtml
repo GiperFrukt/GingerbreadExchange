@@ -22,18 +22,20 @@
                 <tr>
                     <td>
                         <div>
-                            @using (Html.BeginForm("Order", "Home", FormMethod.Post))
+                            @using (Html.BeginForm("Index", "Home", FormMethod.Post))
                             {
                                 <input type="hidden" value="Buy" name="dealOperation" />
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
+                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Price)
                                     </div>
                                 </div>
                                 <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.GingerbreadVM.Count, new { @class = "form-control", @placeholder = "Количество" })
+                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Count)
                                     </div>
                                     <div class="col-md-5">
                                         <p><button type="submit">Ок</button></p>
@@ -43,6 +45,7 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
+                                        @Html.ValidationMessageFor(m=>m.OrderVM.Email)
                                     </div>
                                 </div>
                             }
@@ -85,18 +88,20 @@
                 <tr>
                     <td>
                         <div>
-                            @using (Html.BeginForm("Order", "Home", FormMethod.Post))
+                            @using (Html.BeginForm("Index", "Home", FormMethod.Post))
                             {
                                 <input type="hidden" value="Sell" name="dealOperation" />
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
+                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Price)
                                     </div>
                                 </div>
                                 <div class="row"><br></div>
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.GingerbreadVM.Count, new { @class = "form-control", @placeholder = "Количество" })
+                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Count)
                                     </div>
                                     <div class="col-md-5">
                                         <p><button type="submit">Ок</button></p>
@@ -106,6 +111,7 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
+                                        @Html.ValidationMessageFor(m => m.OrderVM.Email)
                                     </div>
                                 </div>
                             }
@@ -155,7 +161,7 @@
                         <th>@Html.DisplayNameFor(m => m.HistoryVM.Price)</th>
                         <th>@Html.DisplayNameFor(m => m.HistoryVM.Count)</th>
                         <th>@Html.DisplayNameFor(m => m.HistoryVM.BuyEmail)</th>
-                        <th>@Html.DisplayNameFor(m => m.HistoryVM.BuyEmail)</th>
+                        <th>@Html.DisplayNameFor(m => m.HistoryVM.SellEmail)</th>
                     </tr>
                     @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).HistoryVMList)
                     {

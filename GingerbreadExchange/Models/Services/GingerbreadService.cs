@@ -11,11 +11,11 @@ namespace GingerbreadExchange.Models.Services
     /// </summary>
     public class GingerbreadService
     {
-        public static IEnumerable QueryGingerbreads()
+        public static IList QueryGingerbreads()
         {
             var sqlBiulder = new SqlBuilder();
-            var result = sqlBiulder.Select<Gingerbread>();
-            return result.ToList();
+            var result = sqlBiulder.Select<Gingerbread>().ToList();
+            return result;
         }
 
         public static bool DeleteGingerbread(Gingerbread gb)

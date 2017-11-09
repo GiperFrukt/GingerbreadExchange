@@ -40,7 +40,7 @@ namespace GingerbreadExchange.Models
         /// <param name="dealOperation"></param>
         /// <param name="gingerbread"></param>
         /// <param name="email"></param>
-        public Order(Deal dealOperation, Gingerbread gingerbread, string email = "")
+        public Order(Deal dealOperation, Gingerbread gingerbread, string email = null)
         {
             DealOperation = dealOperation;
             Gingerbread = gingerbread;
