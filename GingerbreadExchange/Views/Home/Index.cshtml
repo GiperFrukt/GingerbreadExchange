@@ -13,8 +13,8 @@
     @using (Html.BeginForm("Index", "Home", FormMethod.Get))
     {
         @Html.DropDownList("cur", new SelectListItem[]
-       { new SelectListItem() { Text = "rur", Value = "rur" },
-         new SelectListItem() { Text = "usd", Value = "usd" }},
+       { new SelectListItem() { Text = "rur", Value = "Rur" },
+         new SelectListItem() { Text = "usd", Value = "Usd" }},
          new { @onchange = @"form.submit();" })
     }
     <div class="row">

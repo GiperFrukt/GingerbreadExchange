@@ -55,7 +55,7 @@ namespace GingerbreadExchange.Controllers
             if (ModelState.IsValid)
             {
                 index.OrderVM.DealOperation = dealOperation == Deal.Buy.ToString() ? Deal.Buy : Deal.Sell;
-                var gingerbread = new Gingerbread(count: index.GingerbreadVM.Count, price: index.GingerbreadVM.Price);
+                var gingerbread = new Gingerbread(count: index.GingerbreadVM.Count, price: index.GingerbreadVM.Price*index.CurrentCurrency.AttitudeToRuble);
                 var order = new Order(email: index.OrderVM.Email, dealOperation: index.OrderVM.DealOperation, gingerbread: gingerbread);
                 OrderService.AddOrder(order);
                 
@@ -209,15 +209,14 @@ namespace GingerbreadExchange.Controllers
             var dbContext = new ExchangeContext();
             SqlBuilder.db = dbContext;
 
-            var currencyString = HttpContext.Request.Cookies["Currency"].Value;
-            //var temp = dbContext.Set<Currency>().ToList();
+            var currencyString = HttpContext.Response.Cookies["Currency"].Value;
             var currencies = CurrencyService.QueryCurrency() as List<Currency>;
             var gingerbreads = GingerbreadService.QueryGingerbreads() as List<Gingerbread>;
             var orders = OrderService.QueryOrders() as List<Order>;
             var histories = HistoryService.QueryHistories() as List<History>;
 
-            var tempCur = new Currency(CurrencyList.Usd, 35);
-            //var currentCur = currencies.Where(t => t.Current.ToString() == currencyString));
+            //var tempCur = new Currency(CurrencyList.Usd, 35);
+            var currentCur = currencies.Where(t => t.Current.ToString() == currencyString).First();
 
             var buyOrderVMList = (orders.Where(t => t.DealOperation == Deal.Buy && t.OrderStatus == Status.Default)
                 .OrderByDescending(p => p.Gingerbread.Price)).Select(t => new OrderVM(t)).ToList();
@@ -228,7 +227,8 @@ namespace GingerbreadExchange.Controllers
             var historyOrderVMList = histories.Where(t=> t.Confirmed == true).Select(t => new HistoryVM(t)).ToList();
 
             return new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList
-                                    , HistoryVMList = historyOrderVMList, CurrentCurrency = tempCur };
+                                    , HistoryVMList = historyOrderVMList, CurrentCurrency = currentCur
+            };
         }
 
     }

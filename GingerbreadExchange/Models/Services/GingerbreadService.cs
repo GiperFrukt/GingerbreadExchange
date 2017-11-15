@@ -40,5 +40,10 @@ namespace GingerbreadExchange.Models.Services
             var result = SqlBuilder.Select<Currency>().ToList();
             return result;
         }
+
+        public static bool UpdateGingerbread(Currency c)
+        {
+            return SqlBuilder.Update<Currency>(c);
+        }
     }
 }
