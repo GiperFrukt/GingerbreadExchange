@@ -195,6 +195,9 @@ namespace GingerbreadExchange.Controllers
 
         IndexVM GetCompositeModel()
         {
+            var dbContext = new ExchangeContext();
+            SqlBuilder.db = dbContext;
+
             var gingerbreads = GingerbreadService.QueryGingerbreads() as List<Gingerbread>;
             var orders = OrderService.QueryOrders() as List<Order>;
             var histories = HistoryService.QueryHistories() as List<History>;

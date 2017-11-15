@@ -14,7 +14,7 @@ namespace GingerbreadExchange.Models
     /// </summary>
     public class SqlBuilder
     {
-        static ExchangeContext db = new ExchangeContext();
+        static public ExchangeContext db = new ExchangeContext();
 
         public static bool Update<T>(T valueToUpdate) where T : class
         {

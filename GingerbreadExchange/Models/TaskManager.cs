@@ -19,31 +19,43 @@ namespace GingerbreadExchange.Models
 
         public void ConfirmDeal()
         {
-            var histories = HistoryService.QueryHistories() as List<History>;
-            var historyOrder = histories.Where(t => t.Id == historyId).First();
-            if (isConfirm)
+            using (var transaction = SqlBuilder.db.Database.BeginTransaction())
             {
-                historyOrder.Confirmed = true;
-                var bOrd = historyOrder.BuyOrder;
-                var sOrd = historyOrder.SellOrder;
-                bOrd.OrderStatus = Status.Complited;
-                sOrd.OrderStatus = Status.Complited;
+                try
+                {
+                    var histories = HistoryService.QueryHistories() as List<History>;
+                    var historyOrder = histories.Where(t => t.Id == historyId).First();
+                    if (isConfirm)
+                    {
+                        historyOrder.Confirmed = true;
+                        var bOrd = historyOrder.BuyOrder;
+                        var sOrd = historyOrder.SellOrder;
+                        bOrd.OrderStatus = Status.Complited;
+                        sOrd.OrderStatus = Status.Complited;
 
-                HistoryService.UpdateHistory(historyOrder);
-                OrderService.UpdateOrder(bOrd);
-                OrderService.UpdateOrder(sOrd);
-            }
-            else
-            {
-                var bOrd = historyOrder.BuyOrder;
-                var sOrd = historyOrder.SellOrder;
+                        HistoryService.UpdateHistory(historyOrder);
+                        OrderService.UpdateOrder(bOrd);
+                        OrderService.UpdateOrder(sOrd);
+                    }
+                    else
+                    {
+                        var bOrd = historyOrder.BuyOrder;
+                        var sOrd = historyOrder.SellOrder;
 
-                bOrd.OrderStatus = Status.Default;
-                sOrd.OrderStatus = Status.Default;
-                OrderService.UpdateOrder(bOrd);
-                OrderService.DeleteOrder(sOrd);
-                HistoryService.DeleteHistory(historyOrder);
+                        bOrd.OrderStatus = Status.Default;
+                        sOrd.OrderStatus = Status.Default;
+                        OrderService.UpdateOrder(bOrd);
+                        OrderService.DeleteOrder(sOrd);
+                        HistoryService.DeleteHistory(historyOrder);
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
             }
+            
         }
 
     }
