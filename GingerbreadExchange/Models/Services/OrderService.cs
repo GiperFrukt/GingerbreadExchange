@@ -14,28 +14,24 @@ namespace GingerbreadExchange.Models.Services
     {
         public static IList QueryOrders()
         {
-            var sqlBiulder = new SqlBuilder();
-            var result = sqlBiulder.Select<Order>();
+            var result = SqlBuilder.Select<Order>();
             return result.Include(t => t.Gingerbread).ToList();
         }
 
         public static bool DeleteOrder(Order o)
         {
-            var sqlBiulder = new SqlBuilder();
             GingerbreadService.DeleteGingerbread(o.Gingerbread);
-            return sqlBiulder.Delete<Order>(o);
+            return SqlBuilder.Delete<Order>(o);
         }
 
         public static bool AddOrder(Order o)
         {
-            var sqlBiulder = new SqlBuilder();
-            return sqlBiulder.Add<Order>(o);
+            return SqlBuilder.Add<Order>(o);
         }
 
         public static bool UpdateOrder(Order o)
         {
-            var sqlBiulder = new SqlBuilder();
-            return sqlBiulder.Update<Order>(o);
+            return SqlBuilder.Update<Order>(o);
         }
     }
 }

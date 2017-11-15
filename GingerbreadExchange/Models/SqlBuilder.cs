@@ -14,9 +14,9 @@ namespace GingerbreadExchange.Models
     /// </summary>
     public class SqlBuilder
     {
-        ExchangeContext db = new ExchangeContext();
+        static ExchangeContext db = new ExchangeContext();
 
-        public bool Update<T>(T valueToUpdate) where T : class
+        public static bool Update<T>(T valueToUpdate) where T : class
         {
             try
             {
@@ -30,7 +30,7 @@ namespace GingerbreadExchange.Models
             }
         }
 
-        public bool Add<T>(T valueToAdd) where T : class
+        public static bool Add<T>(T valueToAdd) where T : class
         {
             try
             {
@@ -44,7 +44,7 @@ namespace GingerbreadExchange.Models
             }
         }
 
-        public bool Delete<T>(T valueToDel) where T : class
+        public static bool Delete<T>(T valueToDel) where T : class
         {
             try
             {
@@ -59,7 +59,7 @@ namespace GingerbreadExchange.Models
         }
 
 
-        public IQueryable<T> Select<T>() where T : class
+        public static IQueryable<T> Select<T>() where T : class
         {
             var table = FindTable<T>();
             return table;
@@ -69,7 +69,7 @@ namespace GingerbreadExchange.Models
         /// Нахождение определённой таблицы в контексте в зависимости от модели таблицы
         /// </summary>
         /// <typeparam name="T">Класс модели таблицы</typeparam>
-        private DbSet<T> FindTable<T>() where T : class
+        private static DbSet<T> FindTable<T>() where T : class
         {
             return db.Set<T>();
         }

@@ -1,0 +1,36 @@
+﻿@model GingerbreadExchange.ViewModels.IndexVM
+
+
+<br>
+<b>Сделки на рассмотрение</b>
+<br>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.DealTime)</th>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.BuyOrderTime)</th>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.SellOrderTime)</th>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.Price)</th>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.Count)</th>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.BuyEmail)</th>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.SellEmail)</th>
+            <th>@Html.DisplayNameFor(m => m.HistoryVM.Confirmed)</th>
+        </tr>
+        @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).HistoryVMList)
+        {
+            <tr>
+                <td>@item.DealTime</td>
+                <td>@item.BuyOrderTime</td>
+                <td>@item.SellOrderTime</td>
+                <td>@item.Price</td>
+                <td>@item.Count</td>
+                <td>@item.BuyEmail</td>
+                <td>@item.SellEmail</td>
+                <td>
+                    <p><a href="/Home/ConfirmDeal?histId=@item.Id&boo=true">Да</a></p>
+                    <p><a href="/Home/ConfirmDeal?histId=@item.Id&boo=false">Нет</a></p>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

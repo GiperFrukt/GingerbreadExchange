@@ -20,7 +20,7 @@ namespace GingerbreadExchange.Models
             var o1 = new Order(Deal.Buy, g1, "first@gmail.com");
             var o2 = new Order(Deal.Buy, g2, "second@mail.ru");
             var o3 = new Order(Deal.Buy, g3);
-            var o4 = new Order(Deal.Sell, g4, "123");
+            var o4 = new Order(Deal.Sell, g4, "test@m.io");
             var o5 = new Order(Deal.Sell, g5, "mail@mail.ru");
 
             db.Gingerbreads.Add(g1);

@@ -12,6 +12,8 @@ namespace GingerbreadExchange.ViewModels
     /// </summary>
     public class HistoryVM
     {
+        public long Id { get; set; }
+
         [Display(Name = "Выполнено")]
         public DateTime DealTime { get; set; }
 
@@ -33,15 +35,20 @@ namespace GingerbreadExchange.ViewModels
         [Display(Name = "E-mail П")]
         public string SellEmail { get; set; }
 
+        [Display(Name = "Подтверждено")]
+        public bool Confirmed { get; set; }
+
         public HistoryVM(History hist)
         {
+            Id = hist.Id;
             DealTime = hist.DealTime;
-            BuyOrderTime = hist.BuyOrderTime;
-            SellOrderTime = hist.SellOrderTime;
+            BuyOrderTime = hist.BuyOrder.CreationTime;
+            SellOrderTime = hist.SellOrder.CreationTime;
             Count = hist.Count;
             Price = hist.Price;
-            BuyEmail = hist.BuyEmail;
-            SellEmail = hist.SellEmail;
+            BuyEmail = hist.BuyOrder.Email;
+            SellEmail = hist.SellOrder.Email;
+            Confirmed = hist.Confirmed;
         }
     }
 }

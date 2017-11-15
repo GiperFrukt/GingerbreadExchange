@@ -13,27 +13,23 @@ namespace GingerbreadExchange.Models.Services
     {
         public static IList QueryGingerbreads()
         {
-            var sqlBiulder = new SqlBuilder();
-            var result = sqlBiulder.Select<Gingerbread>().ToList();
+            var result = SqlBuilder.Select<Gingerbread>().ToList();
             return result;
         }
 
         public static bool DeleteGingerbread(Gingerbread gb)
         {
-            var sqlBiulder = new SqlBuilder();
-            return sqlBiulder.Delete<Gingerbread>(gb);
+            return SqlBuilder.Delete<Gingerbread>(gb);
         }
 
         public static bool AddGingerbread(Gingerbread gb)
         {
-            var sqlBiulder = new SqlBuilder();
-            return sqlBiulder.Add<Gingerbread>(gb);
+            return SqlBuilder.Add<Gingerbread>(gb);
         }
 
         public static bool UpdateGingerbread(Gingerbread gb)
         {
-            var sqlBiulder = new SqlBuilder();
-            return sqlBiulder.Update<Gingerbread>(gb);
+            return SqlBuilder.Update<Gingerbread>(gb);
         }
     }
 }

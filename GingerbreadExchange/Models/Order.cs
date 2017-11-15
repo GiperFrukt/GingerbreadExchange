@@ -17,6 +17,13 @@ namespace GingerbreadExchange.Models
         Sell
     }
 
+    public enum Status
+    {
+        OnConfirmation,
+        Complited,
+        Default
+    }
+
     /// <summary>
     /// Модель Заказа
     /// </summary>
@@ -25,13 +32,14 @@ namespace GingerbreadExchange.Models
         public Order()
         { }
 
-        public Order(Order o)
+        public Order(Order o, Gingerbread g)
         {
             Id = o.Id;
             DealOperation = o.DealOperation;
-            Gingerbread = o.Gingerbread;
+            Gingerbread = g;
             CreationTime = o.CreationTime;
             Email = o.Email;
+            OrderStatus = Status.Default;
         }
 
         /// <summary>
@@ -46,6 +54,7 @@ namespace GingerbreadExchange.Models
             Gingerbread = gingerbread;
             CreationTime = DateTime.Now;
             Email = email;
+            OrderStatus = Status.Default;
         }
 
         [Key]
@@ -58,6 +67,8 @@ namespace GingerbreadExchange.Models
         public DateTime CreationTime { get; set; }
 
         public string Email { get; set; }
+
+        public Status OrderStatus { get; set; }
 
         //[NotMapped]
         //public Gingerbread GetGingerbread { get { return Gingerbread; } set { } }

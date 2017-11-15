@@ -17,7 +17,44 @@ namespace GingerbreadExchange.Controllers
             return View(indexVM);
         }
 
-        
+        public ActionResult Admin()
+        {
+            var histories = HistoryService.QueryHistories() as List<History>;
+            var historyOrderVMList = histories.Where(t => t.Confirmed == false).Select(t => new HistoryVM(t)).ToList();
+
+            return View(new IndexVM() { HistoryVMList = historyOrderVMList });
+        }
+
+        [HttpGet]
+        public ActionResult ConfirmDeal(long histId, bool boo)
+        {
+            var histories = HistoryService.QueryHistories() as List<History>;
+            var historyOrder = histories.Where(t => t.Id == histId).First();
+            if (boo)
+            {
+                historyOrder.Confirmed = true;
+                var bOrd = historyOrder.BuyOrder;
+                var sOrd = historyOrder.SellOrder;
+                bOrd.OrderStatus = Status.Complited;
+                sOrd.OrderStatus = Status.Complited;
+
+                HistoryService.UpdateHistory(historyOrder);
+                OrderService.UpdateOrder(bOrd);
+                OrderService.UpdateOrder(sOrd);
+            }
+            else
+            {
+                var bOrd = historyOrder.BuyOrder; 
+                var sOrd = historyOrder.SellOrder;
+
+                bOrd.OrderStatus = Status.Default;
+                sOrd.OrderStatus = Status.Default;
+                OrderService.UpdateOrder(bOrd);
+                OrderService.UpdateOrder(sOrd);
+                HistoryService.DeleteHistory(historyOrder);
+            }
+            return Redirect("Admin");
+        }
 
         [HttpPost]
         public ActionResult Index([Bind(Include = "GingerbreadVM, OrderVM")] IndexVM index, string dealOperation)
@@ -63,28 +100,49 @@ namespace GingerbreadExchange.Controllers
                 do
                 {
                     var sellOrd = selected.ElementAt(i);
-                    var completedDeal = new History(buyOrd, sellOrd, sellOrd.Gingerbread.Price);
-                    HistoryService.AddHistory(completedDeal);
-
                     if (buyOrd.Gingerbread.Count == sellOrd.Gingerbread.Count)
                     {
-                        OrderService.DeleteOrder(buyOrd);
-                        OrderService.DeleteOrder(sellOrd);
+                        buyOrd.OrderStatus = Status.OnConfirmation;
+                        sellOrd.OrderStatus = Status.OnConfirmation;
+                        var completedDeal = new History(buyOrd, sellOrd, sellOrd.Gingerbread.Price);
+                        HistoryService.AddHistory(completedDeal);
                         done = true;
                     }
                     else if (buyOrd.Gingerbread.Count < sellOrd.Gingerbread.Count)
                     {
+                        // заказ, уходящий на сделку
+                        var residual = new Order(sellOrd, new Gingerbread(buyOrd.Gingerbread.Count, sellOrd.Gingerbread.Price));
+                        OrderService.AddOrder(residual);
+
+                        // осталось пряников у продаца
                         sellOrd.Gingerbread.Count = sellOrd.Gingerbread.Count - buyOrd.Gingerbread.Count;
                         GingerbreadService.UpdateGingerbread(sellOrd.Gingerbread);
-                        OrderService.DeleteOrder(buyOrd);
+
+                        buyOrd.OrderStatus = Status.OnConfirmation;
+                        residual.OrderStatus = Status.OnConfirmation;
+                        var completedDeal = new History(buyOrd, residual, sellOrd.Gingerbread.Price);
+                        HistoryService.AddHistory(completedDeal);
                         done = true;
                     }
                     else // if (buy.Gingerbread.Count > sell.Gingerbread.Count)
                     {
+                        // то, что уходит на сделку
+                        var residual = new Order(buyOrd, new Gingerbread(sellOrd.Gingerbread.Count, buyOrd.Gingerbread.Price));
+                        OrderService.AddOrder(residual);
+
+                        // столько пряников не купили
                         buyOrd.Gingerbread.Count = buyOrd.Gingerbread.Count - sellOrd.Gingerbread.Count;
                         GingerbreadService.UpdateGingerbread(buyOrd.Gingerbread);
-                        OrderService.DeleteOrder(sellOrd);
+                        OrderService.UpdateOrder(buyOrd);
+
+                        residual.OrderStatus = Status.OnConfirmation;
+                        sellOrd.OrderStatus = Status.OnConfirmation;
+                        var completedDeal = new History(residual, sellOrd, sellOrd.Gingerbread.Price);
+                        HistoryService.AddHistory(completedDeal);
                     }
+
+
+                    
                     i++;
                 } while (selected.Count > i && !done);
             }
@@ -139,13 +197,13 @@ namespace GingerbreadExchange.Controllers
             var orders = OrderService.QueryOrders() as List<Order>;
             var histories = HistoryService.QueryHistories() as List<History>;
 
-            var buyOrderVMList = (orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price))
-                .Select(t => new OrderVM(t)).ToList();
+            var buyOrderVMList = (orders.Where(t => t.DealOperation == Deal.Buy && t.OrderStatus == Status.Default)
+                .OrderByDescending(p => p.Gingerbread.Price)).Select(t => new OrderVM(t)).ToList();
 
-            var sellOrderVMList = (orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price))
-                .Select(t => new OrderVM(t)).ToList();
+            var sellOrderVMList = (orders.Where(t => t.DealOperation == Deal.Sell && t.OrderStatus == Status.Default)
+                .OrderBy(p => p.Gingerbread.Price)).Select(t => new OrderVM(t)).ToList();
 
-            var historyOrderVMList = histories.Select(t => new HistoryVM(t)).ToList();
+            var historyOrderVMList = histories.Where(t=> t.Confirmed == true).Select(t => new HistoryVM(t)).ToList();
 
             return new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList, HistoryVMList = historyOrderVMList };
         }

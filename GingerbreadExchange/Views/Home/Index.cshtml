@@ -1,7 +1,4 @@
 ﻿@model GingerbreadExchange.ViewModels.IndexVM
-@{
-    Layout = null;
-}
 
 <!DOCTYPE html>
 
@@ -162,6 +159,7 @@
                         <th>@Html.DisplayNameFor(m => m.HistoryVM.Count)</th>
                         <th>@Html.DisplayNameFor(m => m.HistoryVM.BuyEmail)</th>
                         <th>@Html.DisplayNameFor(m => m.HistoryVM.SellEmail)</th>
+                        <th>@Html.DisplayNameFor(m => m.HistoryVM.Confirmed)</th>
                     </tr>
                     @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).HistoryVMList)
                     {
@@ -173,6 +171,7 @@
                             <td>@item.Count</td>
                             <td>@item.BuyEmail</td>
                             <td>@item.SellEmail</td>
+                            <td>@item.Confirmed</td>
                         </tr>
                     }
                 </tbody>

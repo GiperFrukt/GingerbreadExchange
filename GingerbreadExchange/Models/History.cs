@@ -22,11 +22,14 @@ namespace GingerbreadExchange.Models
 
             Count = buyCount <= sellCount ? buyCount : sellCount;
             DealTime = DateTime.Now;
-            BuyOrderTime = buyOrder.CreationTime;
-            SellOrderTime = sellOrder.CreationTime;
+            //BuyOrderTime = buyOrder.CreationTime;
+            //SellOrderTime = sellOrder.CreationTime;
             Price = price;
-            BuyEmail = buyOrder.Email == null ? "--" : buyOrder.Email;
-            SellEmail = sellOrder.Email == null ? "--" : sellOrder.Email;
+            //BuyEmail = buyOrder.Email == null ? "--" : buyOrder.Email;
+            //SellEmail = sellOrder.Email == null ? "--" : sellOrder.Email;
+            BuyOrder = buyOrder;
+            SellOrder = sellOrder;
+            Confirmed = false;
         }
 
         [Key]
@@ -34,17 +37,23 @@ namespace GingerbreadExchange.Models
 
         public DateTime DealTime { get; set; }
 
-        public DateTime BuyOrderTime { get; set; }
+        //public DateTime BuyOrderTime { get; set; }
 
-        public DateTime SellOrderTime { get; set; }
+        //public DateTime SellOrderTime { get; set; }
 
         public int Count { get; set; }
 
         public decimal Price { get; set; }
 
-        public string BuyEmail { get; set; }
+        public Order BuyOrder { get; set; }
 
-        public string SellEmail { get; set; }
+        public Order SellOrder { get; set; }
+
+        //public string BuyEmail { get; set; }
+
+        //public string SellEmail { get; set; }
+
+        public bool Confirmed { get; set; }
 
         //[NotMapped]
         //public string NotSold { get { return Group.GroupName; } set { } }

@@ -46,10 +46,6 @@ namespace GingerbreadExchange.Models
         {
             public HistoryConfiguration()
             {
-                this.Property(t => t.BuyEmail).IsRequired().HasMaxLength(50);
-                this.Property(t => t.SellEmail).IsRequired().HasMaxLength(50);
-                this.Property(t => t.BuyOrderTime).IsRequired();
-                this.Property(t => t.SellOrderTime).IsRequired();
                 this.Property(t => t.Count).IsRequired();
                 this.Property(t => t.DealTime).IsRequired();
                 this.Property(t => t.Price).IsRequired();
