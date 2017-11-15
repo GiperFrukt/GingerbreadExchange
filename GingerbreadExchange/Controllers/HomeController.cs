@@ -12,8 +12,19 @@ namespace GingerbreadExchange.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index(string cur)
         {
+            if (HttpContext.Request.Cookies.AllKeys.Contains("Currency"))
+            {
+                if (HttpContext.Request.Cookies["Currency"].Value != cur)
+                {
+                    HttpContext.Response.Cookies["Currency"].Value = cur;
+                }
+            }
+            else
+            {
+                HttpContext.Response.Cookies["Currency"].Value = "Rur";
+            }
             var indexVM = GetCompositeModel();
             return View(indexVM);
         }
@@ -198,9 +209,15 @@ namespace GingerbreadExchange.Controllers
             var dbContext = new ExchangeContext();
             SqlBuilder.db = dbContext;
 
+            var currencyString = HttpContext.Request.Cookies["Currency"].Value;
+            //var temp = dbContext.Set<Currency>().ToList();
+            var currencies = CurrencyService.QueryCurrency() as List<Currency>;
             var gingerbreads = GingerbreadService.QueryGingerbreads() as List<Gingerbread>;
             var orders = OrderService.QueryOrders() as List<Order>;
             var histories = HistoryService.QueryHistories() as List<History>;
+
+            var tempCur = new Currency(CurrencyList.Usd, 35);
+            //var currentCur = currencies.Where(t => t.Current.ToString() == currencyString));
 
             var buyOrderVMList = (orders.Where(t => t.DealOperation == Deal.Buy && t.OrderStatus == Status.Default)
                 .OrderByDescending(p => p.Gingerbread.Price)).Select(t => new OrderVM(t)).ToList();
@@ -210,7 +227,8 @@ namespace GingerbreadExchange.Controllers
 
             var historyOrderVMList = histories.Where(t=> t.Confirmed == true).Select(t => new HistoryVM(t)).ToList();
 
-            return new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList, HistoryVMList = historyOrderVMList };
+            return new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList
+                                    , HistoryVMList = historyOrderVMList, CurrentCurrency = tempCur };
         }
 
     }

@@ -43,5 +43,7 @@ namespace GingerbreadExchange.ViewModels
         /// Отображение истории совершённых операций для именования соответствующей таблицы на странице
         /// </summary>
         public HistoryVM HistoryVM { get; }
+
+        public Currency CurrentCurrency { get; set; }
     }
 }

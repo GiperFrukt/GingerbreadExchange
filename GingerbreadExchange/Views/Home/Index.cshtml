@@ -10,6 +10,13 @@
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Get))
+    {
+        @Html.DropDownList("cur", new SelectListItem[]
+       { new SelectListItem() { Text = "rur", Value = "rur" },
+         new SelectListItem() { Text = "usd", Value = "usd" }},
+         new { @onchange = @"form.submit();" })
+    }
     <div class="row">
         <div class="col-md-4">
             <table class="table table-bordered">
@@ -64,7 +71,7 @@
                                 @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).SellVMList)
                                 {
                                     <tr>
-                                        <td>@item.GingerbreadVM.Price</td>
+                                        <td>@Decimal.Round((@item.GingerbreadVM.Price/@Model.CurrentCurrency.AttitudeToRuble),2)</td>
                                         <td>@item.GingerbreadVM.Count</td>
                                         <td>@item.Email</td>
                                     </tr>
@@ -130,7 +137,7 @@
                                 @foreach (var b in (Model as GingerbreadExchange.ViewModels.IndexVM).BuyVMList)
                                 {
                                     <tr>
-                                        <td>@b.GingerbreadVM.Price</td>
+                                        <td>@Decimal.Round((@b.GingerbreadVM.Price / @Model.CurrentCurrency.AttitudeToRuble), 2)</td>
                                         <td>@b.GingerbreadVM.Count</td>
                                         <td>@b.Email</td>
                                     </tr>
@@ -167,7 +174,7 @@
                             <td>@item.DealTime</td>
                             <td>@item.BuyOrderTime</td>
                             <td>@item.SellOrderTime</td>
-                            <td>@item.Price</td>
+                            <td>@Decimal.Round((@item.Price/@Model.CurrentCurrency.AttitudeToRuble),2)</td>
                             <td>@item.Count</td>
                             <td>@item.BuyEmail</td>
                             <td>@item.SellEmail</td>

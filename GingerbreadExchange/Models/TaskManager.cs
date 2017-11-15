@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 
 namespace GingerbreadExchange.Models
@@ -21,6 +22,7 @@ namespace GingerbreadExchange.Models
         {
             using (var transaction = SqlBuilder.db.Database.BeginTransaction())
             {
+                Thread.Sleep(5000);
                 try
                 {
                     var histories = HistoryService.QueryHistories() as List<History>;

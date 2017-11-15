@@ -12,15 +12,25 @@ namespace GingerbreadExchange.Models
         public ExchangeContext()
         { }
 
+        public DbSet<Currency> Currencies { get; set; }
         public DbSet<Gingerbread> Gingerbreads { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<History> Histories { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Configurations.Add(new CurrencyConfiguration());
             modelBuilder.Configurations.Add(new GingerbreadConfiguration());
             modelBuilder.Configurations.Add(new OrderConfiguration());
             modelBuilder.Configurations.Add(new HistoryConfiguration());
+        }
+
+        public class CurrencyConfiguration : EntityTypeConfiguration<Currency>
+        {
+            public CurrencyConfiguration()
+            {
+                this.Property(t => t.AttitudeToRuble).IsRequired();
+            }
         }
 
         public class GingerbreadConfiguration : EntityTypeConfiguration<Gingerbread>

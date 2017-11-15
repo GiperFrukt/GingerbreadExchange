@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using GingerbreadExchange.Jobs;
 
 namespace GingerbreadExchange.Models
 {
@@ -35,7 +36,15 @@ namespace GingerbreadExchange.Models
             db.Orders.Add(o4);
             db.Orders.Add(o5);
 
+            var c1 = new Currency(CurrencyList.Rur, 1);
+            var c2 = new Currency(CurrencyList.Usd, 35);
+
+            db.Currencies.Add(c1);
+            db.Currencies.Add(c2);
+
             db.SaveChanges();
+
+            CurrencySheduler.Start();
 
             base.Seed(db);
         }

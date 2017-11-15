@@ -32,4 +32,13 @@ namespace GingerbreadExchange.Models.Services
             return SqlBuilder.Update<Gingerbread>(gb);
         }
     }
+
+    public class CurrencyService
+    {
+        public static IList QueryCurrency()
+        {
+            var result = SqlBuilder.Select<Currency>().ToList();
+            return result;
+        }
+    }
 }
