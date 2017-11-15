@@ -156,6 +156,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\actionResuolt.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -163,6 +164,7 @@
     <Compile Include="Models\Services\GingerbreadService.cs" />
     <Compile Include="Models\Services\HistoryService.cs" />
     <Compile Include="Models\Services\OrderService.cs" />
+    <Compile Include="Models\TaskManager.cs" />
     <Compile Include="ViewModels\GingerbreadVM.cs" />
     <Compile Include="ViewModels\IndexVM.cs" />
     <Compile Include="ViewModels\OrderVM.cs" />

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using GingerbreadExchange.ViewModels;
 using GingerbreadExchange.Models;
 using GingerbreadExchange.Models.Services;
+using System.Threading;
 
 namespace GingerbreadExchange.Controllers
 {
@@ -28,33 +29,14 @@ namespace GingerbreadExchange.Controllers
         [HttpGet]
         public ActionResult ConfirmDeal(long histId, bool boo)
         {
-            var histories = HistoryService.QueryHistories() as List<History>;
-            var historyOrder = histories.Where(t => t.Id == histId).First();
-            if (boo)
-            {
-                historyOrder.Confirmed = true;
-                var bOrd = historyOrder.BuyOrder;
-                var sOrd = historyOrder.SellOrder;
-                bOrd.OrderStatus = Status.Complited;
-                sOrd.OrderStatus = Status.Complited;
+            var tempTM = new TaskManager(histId, boo);
 
-                HistoryService.UpdateHistory(historyOrder);
-                OrderService.UpdateOrder(bOrd);
-                OrderService.UpdateOrder(sOrd);
-            }
-            else
-            {
-                var bOrd = historyOrder.BuyOrder; 
-                var sOrd = historyOrder.SellOrder;
+            Thread myThread = new Thread(new ThreadStart(tempTM.ConfirmDeal));
+            myThread.Start();
 
-                bOrd.OrderStatus = Status.Default;
-                sOrd.OrderStatus = Status.Default;
-                OrderService.UpdateOrder(bOrd);
-                OrderService.UpdateOrder(sOrd);
-                HistoryService.DeleteHistory(historyOrder);
-            }
-            return Redirect("Admin");
+            return Redirect("Index");
         }
+
 
         [HttpPost]
         public ActionResult Index([Bind(Include = "GingerbreadVM, OrderVM")] IndexVM index, string dealOperation)
@@ -140,8 +122,6 @@ namespace GingerbreadExchange.Controllers
                         var completedDeal = new History(residual, sellOrd, sellOrd.Gingerbread.Price);
                         HistoryService.AddHistory(completedDeal);
                     }
-
-
                     
                     i++;
                 } while (selected.Count > i && !done);
@@ -163,28 +143,50 @@ namespace GingerbreadExchange.Controllers
                 int i = 0;
                 do
                 {
-                    var bOrd = selected.ElementAt(i);
-                    var completedDeal = new History(bOrd, sellOrd, bOrd.Gingerbread.Price);
-                    HistoryService.AddHistory(completedDeal);
+                    var buyOrd = selected.ElementAt(i);
 
-                    if (sellOrd.Gingerbread.Count == bOrd.Gingerbread.Count)
+
+                    if (sellOrd.Gingerbread.Count == buyOrd.Gingerbread.Count)
                     {
-                        OrderService.DeleteOrder(bOrd);
-                        OrderService.DeleteOrder(sellOrd);
+                        buyOrd.OrderStatus = Status.OnConfirmation;
+                        sellOrd.OrderStatus = Status.OnConfirmation;
+                        var completedDeal = new History(buyOrd, sellOrd, buyOrd.Gingerbread.Price);
+                        HistoryService.AddHistory(completedDeal);
                         done = true;
                     }
-                    else if (sellOrd.Gingerbread.Count < bOrd.Gingerbread.Count)
+                
+                    else if (sellOrd.Gingerbread.Count < buyOrd.Gingerbread.Count)
                     {
-                        bOrd.Gingerbread.Count = bOrd.Gingerbread.Count - sellOrd.Gingerbread.Count;
-                        GingerbreadService.UpdateGingerbread(bOrd.Gingerbread);
-                        OrderService.DeleteOrder(sellOrd);
+                        // то, что уходит на сделку
+                        var residual = new Order(buyOrd, new Gingerbread(sellOrd.Gingerbread.Count, buyOrd.Gingerbread.Price));
+                        OrderService.AddOrder(residual);
+
+                        // столько пряников не купили
+                        buyOrd.Gingerbread.Count = buyOrd.Gingerbread.Count - sellOrd.Gingerbread.Count;
+                        GingerbreadService.UpdateGingerbread(buyOrd.Gingerbread);
+                        OrderService.UpdateOrder(buyOrd);
+
+                        residual.OrderStatus = Status.OnConfirmation;
+                        sellOrd.OrderStatus = Status.OnConfirmation;
+                        var completedDeal = new History(residual, sellOrd, buyOrd.Gingerbread.Price);
+                        HistoryService.AddHistory(completedDeal);
+
                         done = true;
                     }
                     else // if (sellOrd.Gingerbread.Count > bOrd.Gingerbread.Count)
                     {
-                        sellOrd.Gingerbread.Count = sellOrd.Gingerbread.Count - bOrd.Gingerbread.Count;
+                        // заказ, уходящий на сделку
+                        var residual = new Order(sellOrd, new Gingerbread(buyOrd.Gingerbread.Count, buyOrd.Gingerbread.Price));
+                        OrderService.AddOrder(residual);
+
+                        // осталось пряников у продаца
+                        sellOrd.Gingerbread.Count = sellOrd.Gingerbread.Count - buyOrd.Gingerbread.Count;
                         GingerbreadService.UpdateGingerbread(sellOrd.Gingerbread);
-                        OrderService.DeleteOrder(bOrd);
+
+                        buyOrd.OrderStatus = Status.OnConfirmation;
+                        residual.OrderStatus = Status.OnConfirmation;
+                        var completedDeal = new History(buyOrd, residual, buyOrd.Gingerbread.Price);
+                        HistoryService.AddHistory(completedDeal);
                     }
                     i++;
                 } while (selected.Count > i && !done);
