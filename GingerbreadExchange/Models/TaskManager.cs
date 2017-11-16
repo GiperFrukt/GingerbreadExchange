@@ -1,5 +1,4 @@
-﻿using GingerbreadExchange.Models.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -20,9 +19,10 @@ namespace GingerbreadExchange.Models
 
         public void ConfirmDeal()
         {
-            using (var transaction = SqlBuilder.db.Database.BeginTransaction())
+            var api = new API();
+            using (var transaction = api.GetContext().Database.BeginTransaction())
             {
-                var api = new API();
+                
                 Thread.Sleep(5000);
                 try
                 {

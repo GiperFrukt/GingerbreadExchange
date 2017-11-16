@@ -1,5 +1,4 @@
-﻿using GingerbreadExchange.Models.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -10,6 +9,11 @@ namespace GingerbreadExchange.Models
     public class API
     {
         private ExchangeContext context = new ExchangeContext();
+
+        public ExchangeContext GetContext()
+        {
+            return context;
+        }
 
         public bool Add(object obj)
         {

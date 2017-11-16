@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using GingerbreadExchange.ViewModels;
 using GingerbreadExchange.Models;
-using GingerbreadExchange.Models.Services;
 using System.Threading;
 
 namespace GingerbreadExchange.Controllers

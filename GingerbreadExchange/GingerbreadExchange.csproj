@@ -176,9 +176,6 @@
     <Compile Include="Jobs\CurrencyUpdater.cs" />
     <Compile Include="Models\API.cs" />
     <Compile Include="Models\Currency.cs" />
-    <Compile Include="Models\Services\GingerbreadService.cs" />
-    <Compile Include="Models\Services\HistoryService.cs" />
-    <Compile Include="Models\Services\OrderService.cs" />
     <Compile Include="Models\TaskManager.cs" />
     <Compile Include="ViewModels\GingerbreadVM.cs" />
     <Compile Include="ViewModels\IndexVM.cs" />
@@ -188,7 +185,6 @@
     <Compile Include="Models\GingerbreadDbInitializer.cs" />
     <Compile Include="Models\History.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\SqlBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\HistoryVM.cs" />
   </ItemGroup>
