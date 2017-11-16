@@ -12,6 +12,8 @@ namespace GingerbreadExchange.Controllers
 {
     public class HomeController : Controller
     {
+        API api = new API();
+
         public ActionResult Index(string cur)
         {
             if (HttpContext.Request.Cookies.AllKeys.Contains("Currency"))
@@ -25,16 +27,15 @@ namespace GingerbreadExchange.Controllers
             {
                 HttpContext.Response.Cookies["Currency"].Value = "Rur";
             }
-            var indexVM = GetCompositeModel();
+            var indexVM = GetCompositeViewModel();
             return View(indexVM);
         }
 
         public ActionResult Admin()
         {
-            var histories = HistoryService.QueryHistories() as List<History>;
-            var historyOrderVMList = histories.Where(t => t.Confirmed == false).Select(t => new HistoryVM(t)).ToList();
+            var histories = api.GetUnconfirmedHistoriesModel().Select(t => new HistoryVM(t)).ToList();
 
-            return View(new IndexVM() { HistoryVMList = historyOrderVMList });
+            return View(new IndexVM() { HistoryVMList = histories });
         }
 
         [HttpGet]
@@ -50,18 +51,19 @@ namespace GingerbreadExchange.Controllers
 
 
         [HttpPost]
-        public ActionResult Index([Bind(Include = "GingerbreadVM, OrderVM")] IndexVM index, string dealOperation)
+        public ActionResult Index([Bind(Include = "GingerbreadVM, OrderVM, CurrentCurrency")] IndexVM index, string dealOperation)
         {
             if (ModelState.IsValid)
             {
                 index.OrderVM.DealOperation = dealOperation == Deal.Buy.ToString() ? Deal.Buy : Deal.Sell;
-                var gingerbread = new Gingerbread(count: index.GingerbreadVM.Count, price: index.GingerbreadVM.Price*index.CurrentCurrency.AttitudeToRuble);
+                var gingerbread = new Gingerbread(count: index.GingerbreadVM.Count, price: index.GingerbreadVM.Price/*index.CurrentCurrency.AttitudeToRuble*/);
                 var order = new Order(email: index.OrderVM.Email, dealOperation: index.OrderVM.DealOperation, gingerbread: gingerbread);
-                OrderService.AddOrder(order);
+                //OrderService.AddOrder(order);
+                api.Add(order);
                 
                 ExecuteOrder(order);
             }
-            var compIndex = GetCompositeModel();
+            var compIndex = GetCompositeViewModel();
             return View(compIndex);
         }
 
@@ -204,31 +206,20 @@ namespace GingerbreadExchange.Controllers
             }
         }
 
-        IndexVM GetCompositeModel()
+        IndexVM GetCompositeViewModel()
         {
-            var dbContext = new ExchangeContext();
-            SqlBuilder.db = dbContext;
-
             var currencyString = HttpContext.Response.Cookies["Currency"].Value;
-            var currencies = CurrencyService.QueryCurrency() as List<Currency>;
-            var gingerbreads = GingerbreadService.QueryGingerbreads() as List<Gingerbread>;
-            var orders = OrderService.QueryOrders() as List<Order>;
-            var histories = HistoryService.QueryHistories() as List<History>;
 
-            //var tempCur = new Currency(CurrencyList.Usd, 35);
-            var currentCur = currencies.Where(t => t.Current.ToString() == currencyString).First();
+            var targetCurrency = api.GetCurrencyModel(currencyString);
 
-            var buyOrderVMList = (orders.Where(t => t.DealOperation == Deal.Buy && t.OrderStatus == Status.Default)
-                .OrderByDescending(p => p.Gingerbread.Price)).Select(t => new OrderVM(t)).ToList();
+            var buyOrderVMList = api.GetBuyOrdersModel().Select(t => new OrderVM(t)).ToList();
 
-            var sellOrderVMList = (orders.Where(t => t.DealOperation == Deal.Sell && t.OrderStatus == Status.Default)
-                .OrderBy(p => p.Gingerbread.Price)).Select(t => new OrderVM(t)).ToList();
+            var sellOrderVMList = api.GetSellOrdersModel().Select(t => new OrderVM(t)).ToList();
 
-            var historyOrderVMList = histories.Where(t=> t.Confirmed == true).Select(t => new HistoryVM(t)).ToList();
+            var historyOrderVMList = api.GetConfirmedHistoriesModel().Select(t => new HistoryVM(t)).ToList();
 
             return new IndexVM() { BuyVMList = buyOrderVMList, SellVMList = sellOrderVMList
-                                    , HistoryVMList = historyOrderVMList, CurrentCurrency = currentCur
-            };
+                                    , HistoryVMList = historyOrderVMList, CurrentCurrency = targetCurrency};
         }
 
     }
