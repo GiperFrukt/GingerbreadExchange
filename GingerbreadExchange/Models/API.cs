@@ -11,11 +11,11 @@ namespace GingerbreadExchange.Models
     {
         private ExchangeContext context = new ExchangeContext();
 
-        public bool Add(object order)
+        public bool Add(object obj)
         {
             try
             {
-                context.Entry(order).State = EntityState.Added;
+                context.Entry(obj).State = EntityState.Added;
                 context.SaveChanges();
                 return true;
             }
@@ -25,33 +25,34 @@ namespace GingerbreadExchange.Models
             }
         }
 
-        //public bool Add(Gingerbread gbread)
-        //{
-        //    try
-        //    {
-        //        context.Entry(gbread).State = EntityState.Added;
-        //        context.SaveChanges();
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return false;
-        //    }
-        //}
+        public bool Delete(object obj)
+        {
+            try
+            {
+                context.Entry(obj).State = EntityState.Deleted;
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            //GingerbreadService.DeleteGingerbread(o.Gingerbread);
+        }
 
-        //public bool AddOrder(Order order)
-        //{
-        //    try
-        //    {
-        //        context.Entry(order).State = EntityState.Added;
-        //        context.SaveChanges();
-        //        return true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return false;
-        //    }
-        //}
+        public bool Update(object obj)
+        {
+            try
+            {
+                context.Entry(obj).State = EntityState.Modified;
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
         #region Select
 
@@ -76,7 +77,7 @@ namespace GingerbreadExchange.Models
         public List<History> GetConfirmedHistoriesModel()
         {
             var table = context.Set<History>();
-            var histories = table.Where(t => t.Confirmed == true);
+            var histories = table.Include(t => t.BuyOrder).Include(t => t.SellOrder).Where(t => t.Confirmed == true);
 
             return histories.ToList();
         }
@@ -84,7 +85,7 @@ namespace GingerbreadExchange.Models
         public List<History> GetUnconfirmedHistoriesModel()
         {
             var table = context.Set<History>();
-            var histories = table.Where(t => t.Confirmed == false);
+            var histories = table.Include(t => t.BuyOrder).Include(t => t.SellOrder).Where(t => t.Confirmed == false);
 
             return histories.ToList();
         }
@@ -95,6 +96,22 @@ namespace GingerbreadExchange.Models
             var currencies = table.Where(t => t.Current.ToString() == targetCurrency);
 
             return currencies.First();
+        }
+
+        //public T GetElementById<T>(long id) where T : class
+        //{
+        //    var table = context.Set<T>();
+        //    var histories = table.Select(t => t.);
+
+        //    return histories.ToList();
+        //}
+
+        public History GetHistoryById(long id)
+        {
+            var table = context.Set<History>();
+            var histories = table.Include(t => t.SellOrder).Include(t => t.BuyOrder).Where(t => t.Id == id);
+
+            return histories.First();
         }
 
         public void GetCompositeModel()

@@ -18,7 +18,11 @@ namespace GingerbreadExchange.Controllers
         {
             if (HttpContext.Request.Cookies.AllKeys.Contains("Currency"))
             {
-                if (HttpContext.Request.Cookies["Currency"].Value != cur)
+                if (cur == null)
+                {
+                    HttpContext.Response.Cookies["Currency"].Value = "Rur";
+                }
+                else if (HttpContext.Request.Cookies["Currency"].Value != cur)
                 {
                     HttpContext.Response.Cookies["Currency"].Value = cur;
                 }
@@ -81,9 +85,10 @@ namespace GingerbreadExchange.Controllers
 
         void ExecuteBuyOrder(Order buyOrd)
         {
-            var orders = OrderService.QueryOrders() as List<Order>;
+            //var orders = OrderService.QueryOrders() as List<Order>;
 
-            var temp = orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price).ToList();
+            //var temp = orders.Where(t => t.DealOperation == Deal.Sell).OrderBy(p => p.Gingerbread.Price).ToList();
+            var temp = api.GetSellOrdersModel();
             // выбрали тех, у кого можем купить, результаты отсортировали по возрастанию цены
             var selected = temp.Where(t => t.Gingerbread.Price <= buyOrd.Gingerbread.Price).ToList();
 
@@ -100,40 +105,40 @@ namespace GingerbreadExchange.Controllers
                         buyOrd.OrderStatus = Status.OnConfirmation;
                         sellOrd.OrderStatus = Status.OnConfirmation;
                         var completedDeal = new History(buyOrd, sellOrd, sellOrd.Gingerbread.Price);
-                        HistoryService.AddHistory(completedDeal);
+                        api.Add(completedDeal);
                         done = true;
                     }
                     else if (buyOrd.Gingerbread.Count < sellOrd.Gingerbread.Count)
                     {
                         // заказ, уходящий на сделку
                         var residual = new Order(sellOrd, new Gingerbread(buyOrd.Gingerbread.Count, sellOrd.Gingerbread.Price));
-                        OrderService.AddOrder(residual);
+                        api.Add(residual);
 
                         // осталось пряников у продаца
                         sellOrd.Gingerbread.Count = sellOrd.Gingerbread.Count - buyOrd.Gingerbread.Count;
-                        GingerbreadService.UpdateGingerbread(sellOrd.Gingerbread);
+                        api.Update(sellOrd.Gingerbread);
 
                         buyOrd.OrderStatus = Status.OnConfirmation;
                         residual.OrderStatus = Status.OnConfirmation;
                         var completedDeal = new History(buyOrd, residual, sellOrd.Gingerbread.Price);
-                        HistoryService.AddHistory(completedDeal);
+                        api.Add(completedDeal);
                         done = true;
                     }
                     else // if (buy.Gingerbread.Count > sell.Gingerbread.Count)
                     {
                         // то, что уходит на сделку
                         var residual = new Order(buyOrd, new Gingerbread(sellOrd.Gingerbread.Count, buyOrd.Gingerbread.Price));
-                        OrderService.AddOrder(residual);
+                        api.Add(residual);
 
                         // столько пряников не купили
                         buyOrd.Gingerbread.Count = buyOrd.Gingerbread.Count - sellOrd.Gingerbread.Count;
-                        GingerbreadService.UpdateGingerbread(buyOrd.Gingerbread);
-                        OrderService.UpdateOrder(buyOrd);
+                        api.Update(buyOrd.Gingerbread);
+                        api.Update(buyOrd);
 
                         residual.OrderStatus = Status.OnConfirmation;
                         sellOrd.OrderStatus = Status.OnConfirmation;
                         var completedDeal = new History(residual, sellOrd, sellOrd.Gingerbread.Price);
-                        HistoryService.AddHistory(completedDeal);
+                        api.Add(completedDeal);
                     }
                     
                     i++;
@@ -143,9 +148,10 @@ namespace GingerbreadExchange.Controllers
 
         void ExecuteSellOrder(Order sellOrd)
         {
-            var orders = OrderService.QueryOrders() as List<Order>;
+            //var orders = OrderService.QueryOrders() as List<Order>;
 
-            var temp = orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price).ToList();
+            //var temp = orders.Where(t => t.DealOperation == Deal.Buy).OrderByDescending(p => p.Gingerbread.Price).ToList();
+            var temp = api.GetBuyOrdersModel();
             // выбрали тех, уому можем продать, результаты отсортировали по убыванию цены
             var selected = temp.Where(t => t.Gingerbread.Price >= sellOrd.Gingerbread.Price).ToList();
 
@@ -164,7 +170,7 @@ namespace GingerbreadExchange.Controllers
                         buyOrd.OrderStatus = Status.OnConfirmation;
                         sellOrd.OrderStatus = Status.OnConfirmation;
                         var completedDeal = new History(buyOrd, sellOrd, buyOrd.Gingerbread.Price);
-                        HistoryService.AddHistory(completedDeal);
+                        api.Add(completedDeal);
                         done = true;
                     }
                 
@@ -172,17 +178,17 @@ namespace GingerbreadExchange.Controllers
                     {
                         // то, что уходит на сделку
                         var residual = new Order(buyOrd, new Gingerbread(sellOrd.Gingerbread.Count, buyOrd.Gingerbread.Price));
-                        OrderService.AddOrder(residual);
+                        api.Add(residual);
 
                         // столько пряников не купили
                         buyOrd.Gingerbread.Count = buyOrd.Gingerbread.Count - sellOrd.Gingerbread.Count;
-                        GingerbreadService.UpdateGingerbread(buyOrd.Gingerbread);
-                        OrderService.UpdateOrder(buyOrd);
+                        api.Update(buyOrd.Gingerbread);
+                        api.Update(buyOrd);
 
                         residual.OrderStatus = Status.OnConfirmation;
                         sellOrd.OrderStatus = Status.OnConfirmation;
                         var completedDeal = new History(residual, sellOrd, buyOrd.Gingerbread.Price);
-                        HistoryService.AddHistory(completedDeal);
+                        api.Add(completedDeal);
 
                         done = true;
                     }
@@ -190,16 +196,16 @@ namespace GingerbreadExchange.Controllers
                     {
                         // заказ, уходящий на сделку
                         var residual = new Order(sellOrd, new Gingerbread(buyOrd.Gingerbread.Count, buyOrd.Gingerbread.Price));
-                        OrderService.AddOrder(residual);
+                        api.Add(residual);
 
                         // осталось пряников у продаца
                         sellOrd.Gingerbread.Count = sellOrd.Gingerbread.Count - buyOrd.Gingerbread.Count;
-                        GingerbreadService.UpdateGingerbread(sellOrd.Gingerbread);
+                        api.Update(sellOrd.Gingerbread);
 
                         buyOrd.OrderStatus = Status.OnConfirmation;
                         residual.OrderStatus = Status.OnConfirmation;
                         var completedDeal = new History(buyOrd, residual, buyOrd.Gingerbread.Price);
-                        HistoryService.AddHistory(completedDeal);
+                        api.Add(completedDeal);
                     }
                     i++;
                 } while (selected.Count > i && !done);
@@ -208,7 +214,10 @@ namespace GingerbreadExchange.Controllers
 
         IndexVM GetCompositeViewModel()
         {
-            var currencyString = HttpContext.Response.Cookies["Currency"].Value;
+
+            var currencyString = HttpContext.Response.Cookies["Currency"].Value == null
+                ? HttpContext.Request.Cookies["Currency"].Value : HttpContext.Response.Cookies["Currency"].Value;
+            //var currencyString = HttpContext.Request.Cookies["Currency"].Value;
 
             var targetCurrency = api.GetCurrencyModel(currencyString);
 

@@ -22,11 +22,13 @@ namespace GingerbreadExchange.Models
         {
             using (var transaction = SqlBuilder.db.Database.BeginTransaction())
             {
+                var api = new API();
                 Thread.Sleep(5000);
                 try
                 {
-                    var histories = HistoryService.QueryHistories() as List<History>;
-                    var historyOrder = histories.Where(t => t.Id == historyId).First();
+                    var historyOrder = api.GetHistoryById(historyId);
+                    //var histories = HistoryService.QueryHistories() as List<History>;
+                    //var historyOrder = histories.Where(t => t.Id == historyId).First();
                     if (isConfirm)
                     {
                         historyOrder.Confirmed = true;
@@ -35,9 +37,12 @@ namespace GingerbreadExchange.Models
                         bOrd.OrderStatus = Status.Complited;
                         sOrd.OrderStatus = Status.Complited;
 
-                        HistoryService.UpdateHistory(historyOrder);
-                        OrderService.UpdateOrder(bOrd);
-                        OrderService.UpdateOrder(sOrd);
+                        api.Update(historyOrder);
+                        api.Update(bOrd);
+                        api.Update(sOrd);
+                        //HistoryService.UpdateHistory(historyOrder);
+                        //OrderService.UpdateOrder(bOrd);
+                        //OrderService.UpdateOrder(sOrd);
                     }
                     else
                     {
@@ -46,9 +51,16 @@ namespace GingerbreadExchange.Models
 
                         bOrd.OrderStatus = Status.Default;
                         sOrd.OrderStatus = Status.Default;
-                        OrderService.UpdateOrder(bOrd);
-                        OrderService.DeleteOrder(sOrd);
-                        HistoryService.DeleteHistory(historyOrder);
+
+                        api.Update(bOrd);
+                        api.Delete(sOrd.Gingerbread);
+                        api.Delete(sOrd);
+
+                        api.Delete(historyOrder);
+
+                        //OrderService.UpdateOrder(bOrd);
+                        //OrderService.DeleteOrder(sOrd);
+                        //HistoryService.DeleteHistory(historyOrder);
                     }
                     transaction.Commit();
                 }

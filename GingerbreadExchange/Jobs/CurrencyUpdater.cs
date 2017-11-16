@@ -19,19 +19,17 @@ namespace GingerbreadExchange.Jobs
     {
         public void Execute(IJobExecutionContext context)
         {
-            var a = new ExchangeContext();
-            SqlBuilder.db = a;
+            var api = new API();
 
             var date = DateTime.Today.ToShortDateString().Replace('.', '/');
             var document = XDocument.Load("http://www.cbr.ru/scripts/XML_daily.asp?date_req="+date);
             var element = document.Root.Elements().First(x => x.Attribute("ID").Value == "R01235");
             var attitude = (element.LastNode as XElement).Value;
 
-            var currencies = CurrencyService.QueryCurrency() as List<Currency>;
-            var currentCur = currencies.Where(t => t.Current.ToString() == "Usd").First();
+            var targetCurrency = api.GetCurrencyModel("Usd");
+            targetCurrency.AttitudeToRuble = Decimal.Parse(attitude);
 
-            currentCur.AttitudeToRuble = Decimal.Parse(attitude);
-            CurrencyService.UpdateGingerbread(currentCur);
+            api.Update(targetCurrency);
         }
     }
 }
