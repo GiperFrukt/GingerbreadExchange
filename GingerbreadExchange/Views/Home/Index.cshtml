@@ -1,5 +1,54 @@
 ﻿@model GingerbreadExchange.ViewModels.IndexVM
 
+
+@helper PrintOrderTable(IEnumerable<GingerbreadExchange.ViewModels.OrderVM> generalOrder)
+{
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.OrderVM.GingerbreadVM.Price)</th>
+                <th>@Html.DisplayNameFor(m => m.OrderVM.GingerbreadVM.Count)</th>
+                <th>@Html.DisplayNameFor(m => m.OrderVM.Email)</th>
+            </tr>
+            @foreach (var item in generalOrder)
+            {
+                <tr>
+                    <td>@Decimal.Round((@item.GingerbreadVM.Price / @Model.CurrentCurrency.AttitudeToRuble), 2)</td>
+                    <td>@item.GingerbreadVM.Count</td>
+                    <td>@item.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@helper PrintInputTable()
+{
+    <div class="row">
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
+            @Html.ValidationMessageFor(m => m.GingerbreadVM.Price)
+        </div>
+    </div>
+    <div class="row"><br></div>
+    <div class="row">
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.GingerbreadVM.Count, new { @class = "form-control", @placeholder = "Количество" })
+            @Html.ValidationMessageFor(m => m.GingerbreadVM.Count)
+        </div>
+        <div class="col-md-5">
+            <p><button type="submit">Ок</button></p>
+        </div>
+    </div>
+    <div class="row"><br></div>
+    <div class="row">
+        <div class="col-md-5">
+            @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
+            @Html.ValidationMessageFor(m => m.OrderVM.Email)
+        </div>
+    </div>
+}
+
 <!DOCTYPE html>
 
 <html>
@@ -29,29 +78,7 @@
                             @using (Html.BeginForm("Index", "Home", FormMethod.Post))
                             {
                                 <input type="hidden" value="Buy" name="dealOperation" />
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
-                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Price)
-                                    </div>
-                                </div>
-                                <div class="row"><br></div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        @Html.TextBoxFor(m => m.GingerbreadVM.Count, new { @class = "form-control", @placeholder = "Количество" })
-                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Count)
-                                    </div>
-                                    <div class="col-md-5">
-                                        <p><button type="submit">Ок</button></p>
-                                    </div>
-                                </div>
-                                <div class="row"><br></div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
-                                        @Html.ValidationMessageFor(m=>m.OrderVM.Email)
-                                    </div>
-                                </div>
+                                @PrintInputTable()
                             }
                         </div>
                     </td>
@@ -61,23 +88,7 @@
                         <br>
                         <b>Ордера на продажу</b>
                         <br>
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <th>@Html.DisplayNameFor(m => m.OrderVM.GingerbreadVM.Price)</th>
-                                    <th>@Html.DisplayNameFor(m => m.OrderVM.GingerbreadVM.Count)</th>
-                                    <th>@Html.DisplayNameFor(m => m.OrderVM.Email)</th>
-                                </tr>
-                                @foreach (var item in (Model as GingerbreadExchange.ViewModels.IndexVM).SellVMList)
-                                {
-                                    <tr>
-                                        <td>@Decimal.Round((@item.GingerbreadVM.Price/@Model.CurrentCurrency.AttitudeToRuble),2)</td>
-                                        <td>@item.GingerbreadVM.Count</td>
-                                        <td>@item.Email</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                        @PrintOrderTable(Model.SellVMList)
                     </td>
                 </tr>
             </table>
@@ -95,29 +106,7 @@
                             @using (Html.BeginForm("Index", "Home", FormMethod.Post))
                             {
                                 <input type="hidden" value="Sell" name="dealOperation" />
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        @Html.TextBoxFor(m => m.GingerbreadVM.Price, new { @class = "form-control", @placeholder = "Цена за шт." })
-                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Price)
-                                    </div>
-                                </div>
-                                <div class="row"><br></div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        @Html.TextBoxFor(m => m.GingerbreadVM.Count, new { @class = "form-control", @placeholder = "Количество" })
-                                        @Html.ValidationMessageFor(m => m.GingerbreadVM.Count)
-                                    </div>
-                                    <div class="col-md-5">
-                                        <p><button type="submit">Ок</button></p>
-                                    </div>
-                                </div>
-                                <div class="row"><br></div>
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        @Html.TextBoxFor(m => m.OrderVM.Email, new { @class = "form-control", @placeholder = "E-mail" })
-                                        @Html.ValidationMessageFor(m => m.OrderVM.Email)
-                                    </div>
-                                </div>
+                                @PrintInputTable()
                             }
                         </div>
                     </td>
@@ -127,23 +116,7 @@
                         <br>
                         <b>Ордера на покупку</b>
                         <br>
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <th>@Html.DisplayNameFor(m => m.OrderVM.GingerbreadVM.Price)</th>
-                                    <th>@Html.DisplayNameFor(m => m.OrderVM.GingerbreadVM.Count)</th>
-                                    <th>@Html.DisplayNameFor(m => m.OrderVM.Email)</th>
-                                </tr>
-                                @foreach (var b in (Model as GingerbreadExchange.ViewModels.IndexVM).BuyVMList)
-                                {
-                                    <tr>
-                                        <td>@Decimal.Round((@b.GingerbreadVM.Price / @Model.CurrentCurrency.AttitudeToRuble), 2)</td>
-                                        <td>@b.GingerbreadVM.Count</td>
-                                        <td>@b.Email</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                        @PrintOrderTable(Model.BuyVMList)
                     </td>
                 </tr>
             </table>
@@ -174,7 +147,7 @@
                             <td>@item.DealTime</td>
                             <td>@item.BuyOrderTime</td>
                             <td>@item.SellOrderTime</td>
-                            <td>@Decimal.Round((@item.Price/@Model.CurrentCurrency.AttitudeToRuble),2)</td>
+                            <td>@Decimal.Round((@item.Price / @Model.CurrentCurrency.AttitudeToRuble), 2)</td>
                             <td>@item.Count</td>
                             <td>@item.BuyEmail</td>
                             <td>@item.SellEmail</td>
