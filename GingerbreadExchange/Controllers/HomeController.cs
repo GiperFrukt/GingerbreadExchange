@@ -34,23 +34,9 @@ namespace GingerbreadExchange.Controllers
             return View(indexVM);
         }
 
-        public ActionResult Admin()
-        {
-            var histories = api.GetUnconfirmedHistoriesModel().Select(t => new HistoryVM(t)).ToList();
+        
 
-            return View(new IndexVM() { HistoryVMList = histories });
-        }
-
-        [HttpGet]
-        public ActionResult ConfirmDeal(long histId, bool boo)
-        {
-            var tempTM = new TaskManager(histId, boo);
-
-            Thread myThread = new Thread(new ThreadStart(tempTM.ConfirmDeal));
-            myThread.Start();
-
-            return Redirect("Index");
-        }
+        
 
 
         [HttpPost]
